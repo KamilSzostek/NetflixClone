@@ -77,6 +77,10 @@
         position: absolute;
         right: 0;
         top: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
         text-transform: uppercase;
         transform: translate(-20%, -50%);
         opacity: .5;
@@ -85,31 +89,9 @@
         &:hover {
             opacity: 1;
         }
-
+        
         span {
             padding: .25em .5em;
-            border: 1px solid white;
-            border-radius: .25em;
-        }
-    }
-
-    .phoneselect {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        text-transform: uppercase;
-        transform: translate(-20%, -50%);
-        opacity: .5;
-        cursor: pointer;
-
-        &:hover {
-            opacity: 1;
-        }
-
-        span {
-            padding: .25em .5em;
-            border: 1px solid white;
-            border-radius: .25em;
         }
     }
 
@@ -131,22 +113,26 @@
         align-items: flex-start;
         gap: 2em;
         color: #7f7878;
-
-        h3 {
+        div{
+            width: 0;
+            height: 0;
+            visibility: hidden;
+        }
+        h4 {
             a {
                 color: #fff;
             }
         }
 
         p {
-            span a {
-                color: rgb(6, 6, 134);
+            span, a {
+                color: blue;
+                cursor: pointer;
+                &:hover{
+                    text-decoration: underline;
+                }
             }
         }
-    }
-
-    .arrowdown {
-        width: 12px;
     }
 }
 

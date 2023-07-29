@@ -74,31 +74,6 @@
                 background: white;
                 border: 1px solid rgba(0, 0, 0, 0.2);
             }
-            .arrowdown{
-                width: 10px;
-                margin-left: 15px;
-                transition: transform .3s;
-            }
-
-            ul{
-                top: 100%;
-                gap: 2em;
-                background: #fff;
-                li{
-                    flex-direction: row-reverse;
-                    justify-content: flex-end;
-                    gap: 1em;
-                    padding-block: .5em;
-                    color: black;
-                    font-size: 1.6rem;
-                    &:hover{
-                        background: #0000001f;
-                    }
-                    span:first-child{
-                        color: rgba(0, 0, 0, 0.548);
-                    }
-                }
-            }
         }
     }
 

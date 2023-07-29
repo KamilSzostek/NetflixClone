@@ -1,4 +1,5 @@
 .login{
+    position: relative;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -7,15 +8,13 @@
     padding-inline: 4em;
     padding-top: 1em;
     background-color: #000;
-    
-    &::before{
-        content: '';
+    .shadow{
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: #00000073;
+        background-color: #00000085;
     }
 }
 

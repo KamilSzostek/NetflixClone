@@ -7,34 +7,5 @@
         color: orange;
         font-size: clamp(1rem, 1rem + 1vw, 1.4rem);
     }
-
-
-    ul{
-        position: absolute;
-        top: 70%;
-        left: 0;
-        right: 0;
-        max-height: 500px;
-        padding-block: .5em;
-        list-style: none;
-        background-color: #d0cccc;
-        color: black;
-        border-bottom-left-radius: .25em;
-        border-bottom-right-radius: .25em;
-        text-align: right;
-        z-index: 1;
-        li{
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: .25em;
-            padding-inline: 1em;
-            font-size: 1.5rem;
-            &:hover{
-                background-color: rgba(0, 0, 255, 0.783);
-                color: white;
-                cursor: pointer;
-            }
-        }
-    }
 }
 

@@ -15,6 +15,7 @@ const Login: FC = () => {
                 <link rel="icon" href="/favicon.ico" />
                 <title>Netflix</title>
             </Head>
+            <div className={styles.shadow} />
             <NavBar linkLogo />
             <main>
                 <SignInForm />
