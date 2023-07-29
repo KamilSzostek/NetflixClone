@@ -1,0 +1,30 @@
+.button{
+    display: flex;
+    place-items: center;
+    height: 35px;
+    padding-inline: 1em;
+    background-color: #E50914;
+    border: none;
+    border-radius: .25em;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    transition: .3s;
+    cursor: pointer;
+    &:hover{
+        background-color: #b61119;
+    }
+    .icon{
+        margin-left: .5em;
+        width: 20px;
+        height: 20px;
+        transform: translateY(15%);
+    }
+}
+.bigbutton{
+    display: inline-block;
+    height: 50px;
+    padding-inline: 2em;
+    font-size: 2rem;
+}

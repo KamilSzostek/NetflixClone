@@ -1,0 +1,134 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 450px;
+    min-height: 500px;
+    margin-bottom: 1em;
+    padding: 4em 3em;
+    color: rgba(0, 0, 0, 0.9);
+    background-color: #F3F3F3;
+    text-align: left;
+
+    h2 {
+        font-weight: bold;
+        font-size: clamp(2.5rem, 2.5rem + 1vw, 3rem);
+    }
+
+    section {
+        position: relative;
+        color: rgba(0, 0, 0, 0.8);
+        font-size: clamp(1.2rem, 1.2rem + 1vw, 1.7rem);
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: flex;
+            gap: 10px;
+            margin-left: 20px;
+            margin-bottom: 15px;
+            font-size: clamp(1rem, 1rem + 1vw, 1.5rem);
+
+            input {
+                transform: scale(1.9);
+            }
+        }
+
+        div {
+            input {
+                width: 100%;
+                height: 40px;
+                margin-top: .5em;
+                padding-inline: .5em;
+
+                &::placeholder{
+                    font-size: 1.6rem;
+                }
+            }
+
+            small {
+                font-size: 1.2rem;
+                color: red;
+            }
+        }
+        .phoneselect{
+            position: relative;
+            display: flex;
+            align-items: center;
+            .selecteddialing{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 40px;
+                width: 80px;
+                background: white;
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                border-right: none;
+                font-size: 1.2rem;
+            }
+            input{
+                margin: 0;
+                width: 225px;
+                background: white;
+                border: 1px solid rgba(0, 0, 0, 0.2);
+            }
+            .arrowdown{
+                width: 10px;
+                margin-left: 15px;
+                transition: transform .3s;
+            }
+
+            ul{
+                top: 100%;
+                gap: 2em;
+                background: #fff;
+                li{
+                    flex-direction: row-reverse;
+                    justify-content: flex-end;
+                    gap: 1em;
+                    padding-block: .5em;
+                    color: black;
+                    font-size: 1.6rem;
+                    &:hover{
+                        background: #0000001f;
+                    }
+                    span:first-child{
+                        color: rgba(0, 0, 0, 0.548);
+                    }
+                }
+            }
+        }
+    }
+
+    button {
+        display: flex;
+        justify-content: center;
+        height: 45px;
+        background: #017CF5;
+        border-radius: .1em;
+        font-size: 2rem;
+        font-weight: normal;
+        text-align: center;
+        transition: background .5s;
+
+        &:hover {
+            background: rgb(130, 130, 245);
+        }
+    }
+
+    button:last-child {
+        display: block;
+        text-align: left;
+        font-size: 1.6rem;
+        background: none;
+        border: none;
+        color: blue;
+
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+}

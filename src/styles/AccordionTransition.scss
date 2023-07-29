@@ -1,0 +1,13 @@
+.show-enter {
+    display: block !important;
+  }
+  
+  .show-enter-active {
+    transition: transform 300ms !important;
+    transform: scaleY(1) !important;
+  }
+  
+  .show-enter-done {
+    display: block !important;
+    transform: scaleY(1) !important;
+  }

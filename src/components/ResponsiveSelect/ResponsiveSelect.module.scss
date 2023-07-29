@@ -1,0 +1,51 @@
+.select {
+    position: relative;
+    width: 50px;
+    height: 35px;
+    margin-right: 1em;
+
+    select {
+        width: inherit;
+        height: inherit;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: .5em;
+        color: #fff;
+        font-size: 0;
+        option{
+            font-size: 1.3rem;
+        }
+
+    }
+
+    .icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        right: 0;
+        bottom: 0;
+        width: 17px;
+        height: 17px;
+        transform: translate(-75%, -50%);
+        transition: transform .2s;
+    }
+}
+
+@media (min-width: 576px) {
+    .select {
+        position: relative;
+        width: 125px;
+
+        select {
+            font-size: 1.3rem;
+            text-align: right;
+        }
+
+        .icon {
+            left: 0 !important;
+            right: 0;
+            bottom: 0;
+            transform: translate(50%, -50%);
+        }
+    }
+
+}

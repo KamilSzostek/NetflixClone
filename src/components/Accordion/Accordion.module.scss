@@ -1,0 +1,49 @@
+.accordion {
+  width: 100%;
+  margin-bottom: 5em;
+  font-size: clamp(1rem, 1rem + .15vw, 2rem);
+
+  div {
+    margin-bottom: 10px;
+    background-color: #333;
+    transition: background .3s;
+
+    &:hover {
+      background-color: #5b5959;
+      cursor: pointer;
+    }
+    .icon{
+      width: 25px;
+    }
+    h2 {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-inline: .5em;
+      padding-block: .5em;
+      text-align: left;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    }
+
+    p {
+      display: none;
+      text-align: left;
+      padding: 1em;
+      border-top: 1px solid black;
+      font-size: clamp(1.8rem, 1rem + .25vw, 2rem);
+      transition: transform .5s;
+      transform-origin: top;
+      transform: scaleY(0);
+    }
+  }
+
+}
