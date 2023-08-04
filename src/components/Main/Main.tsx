@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Accordion from '../Accordion/Accordion';
 import BaseSection from '../ui/BaseSection/BaseSection';
-import Newsletter from '../Newsletter/Newsletter';
+import Newsletter from '../Memebership/Membership';
 import Tv from '../../../public/assets/extras/tv.png';
 import Mobile from '../../../public/assets/extras/mobile.jpg';
 import Screen from '../../../public/assets/extras/device-pile.png';

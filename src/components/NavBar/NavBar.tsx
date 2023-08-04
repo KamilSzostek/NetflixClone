@@ -12,12 +12,13 @@ interface INavBarProps {
     linkLogo?: boolean,
     showSignButton?: boolean,
     showLanguageSelect?: boolean,
-    invertedButtonStyle?: boolean
+    invertedButtonStyle?: boolean,
+    isStatic?: boolean
 }
 
-const NavBar: FC<INavBarProps> = ({ linkLogo, showLanguageSelect, showSignButton }) => {
-
-    return (<nav className={styles.navbar}>
+const NavBar: FC<INavBarProps> = ({ linkLogo, showLanguageSelect, showSignButton, isStatic }) => {
+    const navStyle = isStatic ? `${styles.navbar} ${styles.static}` : `${styles.navbar}`
+    return (<nav className={navStyle}>
         {linkLogo ? <Link href='/'><Image src={LogoNetflix} alt="logo netflix" priority/></Link> : <Image src={LogoNetflix} alt="logo netflix" priority/>}
         {
             (<div>

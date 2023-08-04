@@ -1,17 +1,20 @@
 import { FC, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import BaseButton from '../ui/BaseButton/BaseButton';
+import CustomInput from '../ui/CustomInput/CustomInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleXmark, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
-import styles from './Newsletter.module.scss'
-import CustomInput from '../ui/CustomInput/CustomInput';
+import styles from './Memebership.module.scss'
 
-const Newsletter: FC = () => {
+const Membership: FC = () => {
     const [validationText, setValidationText] = useState<string>('Email is required')
     const [inputValue, setInputValue] = useState<string>('')
 
     const inputRef = useRef<HTMLInputElement>(null)
     const validRef = useRef<HTMLElement>(null)
+
+    const router = useRouter()
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -20,18 +23,23 @@ const Newsletter: FC = () => {
             setValidationText('Email is required.')
             inputRef.current?.classList.add('red-border')
             validRef.current?.classList.add('opacity-1')
+            return
         }
+        if(validationText === '' && inputValue.length > 5)
+            router.push('/signup')
     }
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.currentTarget.value)
         const emailRegex = new RegExp('^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$')
 
         if (inputValue.length > 5 && !inputValue.match(emailRegex)) {
-            setValidationText('Please enter a valid email addres')
+            setValidationText('Please enter a valid email address')
             validRef.current?.classList.add('opacity-1')
         }
-        else
+        else {
             validRef.current?.classList.remove('opacity-1')
+            setValidationText('')
+        }
     }
     return (
         <section className={styles.newsletter}>
@@ -46,4 +54,4 @@ const Newsletter: FC = () => {
         </section>);
 };
 
-export default Newsletter;
+export default Membership;

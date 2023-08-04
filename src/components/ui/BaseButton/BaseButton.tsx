@@ -9,7 +9,8 @@ interface IBaseButtonProps {
   text: string,
   isBig?: boolean,
   icon?: IconDefinition,
-  linkPath?: string
+  linkPath?: string,
+  onClick?: ()=>void
 }
 
 const BaseButton: FC<IBaseButtonProps> = ({ text, isBig, icon, linkPath }) => {

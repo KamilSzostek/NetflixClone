@@ -17,3 +17,18 @@
         display: flex;
     }
 }
+
+.static{
+    position: static;
+
+    a{
+        background: none;
+        color: #333;
+        font-size: 1.9rem;
+        font-weight: normal;
+        &:hover{
+            background: none;
+            text-decoration: underline;
+        }
+    }
+}

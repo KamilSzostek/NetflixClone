@@ -17,7 +17,7 @@ const HelpForm: FC = () => {
         e.preventDefault()
         const emailReg = new RegExp('^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$')
         !inputRef.current?.value.match(emailReg) ? setMessage('Please enter a valid email address.') : setMessage('')
-    }
+    } 
     return (
         <form className={styles.form} onSubmit={submitHandler}>
             <h2>Forgot Email/Password</h2>
