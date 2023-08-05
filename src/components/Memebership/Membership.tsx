@@ -4,6 +4,7 @@ import BaseButton from '../ui/BaseButton/BaseButton';
 import CustomInput from '../ui/CustomInput/CustomInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleXmark, faChevronRight } from '@fortawesome/free-solid-svg-icons'
+import { emailValidation } from '@/helpers/validationFunctions';
 
 import styles from './Memebership.module.scss'
 
@@ -19,20 +20,18 @@ const Membership: FC = () => {
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (inputValue === '') {
-            setValidationText('Email is required.')
+        if (emailValidation(inputValue))
+            router.push('/signup')
+        else {
             inputRef.current?.classList.add('red-border')
             validRef.current?.classList.add('opacity-1')
-            return
+            inputValue === '' ? setValidationText('Email is required.') : setValidationText('Please enter a valid email address')
         }
-        if(validationText === '' && inputValue.length > 5)
-            router.push('/signup')
     }
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.currentTarget.value)
-        const emailRegex = new RegExp('^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$')
 
-        if (inputValue.length > 5 && !inputValue.match(emailRegex)) {
+        if (inputValue.length > 5 && !emailValidation(inputValue)) {
             setValidationText('Please enter a valid email address')
             validRef.current?.classList.add('opacity-1')
         }

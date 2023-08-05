@@ -4,6 +4,8 @@ import Main from '@/components/Main/Main'
 import Footer from '@/components/Footer/Footer'
 
 export default function Home() {
+  const footerLinkArr = ['FAQ', 'Help Center', 'Account', 'Media Center', 'Investor Relations', 'Jobs', 'Redeem gift cards', 'Buy gift cards', 'Terms of Use', 'Privacy', 'Cookie Preferences', 'Corporate Information', 'Contact Us', 'Speed test', 'Legal Guarantee', 'Legal Notices', 'Only Netflix']
+
   return (
     <>
       <Head>
@@ -14,7 +16,7 @@ export default function Home() {
       </Head>
       <Header />
       <Main />
-      <Footer />
+      <Footer linkList={footerLinkArr}/>
     </>
   )
 }

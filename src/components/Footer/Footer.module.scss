@@ -17,7 +17,33 @@
         font-size: clamp(1.2rem, 1.2rem + 0.5vw, 2rem);
     }
 }
-@media(min-width: 992px){
+.lightbg{
+    padding-left: 2vw;
+    background: #F3F3F3;
+    color: #333333bb;
+    h3{
+        margin-block: 1em;
+        font-size: 1.7rem;
+        font-weight: bold;
+    }
+    ul{
+        max-width: 1000px;
+        li{
+            font-size: clamp(1rem, 1rem + 0.5vw, 1.3rem);
+            text-decoration: none;
+            &:hover{
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        }
+    }
+    select{
+        background: #fff;
+        color: #333;
+        border-radius: 0;
+    }
+}
+@media(min-width: 526px){
     .footer{
         ul{
             li{
@@ -26,7 +52,16 @@
         }
     }
 }
-@media(min-width: 1200px){
+@media(min-width: 756px){
+    .footer{
+        ul{
+            li{
+                width: calc(25% - 20px);
+            }
+        }
+    }
+}
+@media(min-width: 992px){
     .footer{
         ul{
             li{

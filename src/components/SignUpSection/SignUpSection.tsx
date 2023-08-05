@@ -1,12 +1,13 @@
-import { FC, ReactElement, useRef} from 'react';
+import { FC, ReactElement, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import styles from './SignUpSection.module.scss'
 
 interface ISignUpSectionProps {
     children: ReactElement,
     showSection?: boolean
 }
 
-const SignUpSection: FC<ISignUpSectionProps> = ({children, showSection}) => {
+const SignUpSection: FC<ISignUpSectionProps> = ({ children, showSection }) => {
     const sectionRef = useRef<HTMLElement>(null)
 
     return (
@@ -16,7 +17,9 @@ const SignUpSection: FC<ISignUpSectionProps> = ({children, showSection}) => {
             timeout={300}
             unmountOnExit={true}
         >
-            {children}
+            <section className={styles.section}>
+                {children}
+            </section>
         </CSSTransition>
     );
 };
