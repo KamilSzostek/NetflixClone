@@ -6,6 +6,9 @@
     gap: 10px;
     width: 340px;
     text-align: center;
+    transform: translate(25%);
+    transition: transform .5s;
+    animation: push .5s 1 forwards;
 
     h2 {
         margin-bottom: 1em;
@@ -114,4 +117,10 @@
         gap: 30px;
     }
 
+}
+
+@keyframes push {
+    to{
+        transform: translateX(0);
+    }
 }

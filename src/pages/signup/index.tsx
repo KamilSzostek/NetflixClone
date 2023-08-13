@@ -60,7 +60,7 @@ const SignUp: FC = () => {
         <div className={styles.signup}>
             <NavBar linkLogo showSignButton isStatic />
             <main className={styles.main}>
-                <SignUpSection width='small' showSection={showFirstSection}>
+                <SignUpSection width='small' showSection={showFirstSection} showSectionHandler={() => setShowFirstSection(!showFirstSection)}>
                     <>
                         <Image width={260} height={60} src={Devices} alt='devices' />
                         <StepCounter currentStep={stepNumber} totalStepInteger={totalStepInteger}/>
