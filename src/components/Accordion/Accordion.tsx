@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {FC} from 'react';
 import AccordionTab from './subcomponents/AccordionTab';
 import styles from  './Accordion.module.scss'
 
@@ -10,7 +10,7 @@ interface IAccordionProps {
     data: ITab[]
 }
 
-const Accordion: React.FunctionComponent<IAccordionProps> = ({ data }) => {
+const Accordion: FC<IAccordionProps> = ({ data }) => {
     const tabs = data.map((tab, index) => (
         <AccordionTab key={index} title={tab.title} text={tab.text}/>
     ))

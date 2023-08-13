@@ -9,13 +9,18 @@ interface ICustomInputProps {
     inputBlur?: (input: HTMLInputElement, type: string)=>void,
     inputValue: string,
     inputType?: string,
+    isLight?: boolean,
     children?: ReactElement
 }
 
-const CustomInput: FC<ICustomInputProps> = ({ children, placeholder, inputRef, inputValue, changeHandler, inputType, inputBlur }) => {
+const CustomInput: FC<ICustomInputProps> = ({ children, placeholder, inputRef, inputValue, changeHandler, inputType, inputBlur, isLight }) => {
     const legendRef = useRef<HTMLLegendElement>(null)
+    const inputInsideRef = useRef<HTMLInputElement>(null)
     
+    const fieldsetStyle = isLight ? `${styles.fieldset} ${styles.light}` : styles.fieldset
+
     const focusHandler = () => {
+        inputRef?.current ? inputRef?.current?.focus() : inputInsideRef.current?.focus()
         legendRef.current?.classList.add(`${styles.move}`)
     }
     const blurHandler = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -23,9 +28,9 @@ const CustomInput: FC<ICustomInputProps> = ({ children, placeholder, inputRef, i
         inputValue === '' && legendRef.current?.classList.remove(`${styles.move}`)
     }
     return (
-        <fieldset className={styles.fieldset}>
-            <legend ref={legendRef}>{placeholder}</legend>
-            <input className={styles.input} ref={inputRef} value={inputValue} type={inputType ? inputType : 'text'} onChange={changeHandler} onFocus={focusHandler} onBlur={blurHandler} />
+        <fieldset className={fieldsetStyle}>
+            <legend ref={legendRef} onClick={focusHandler}>{placeholder}</legend>
+            <input className={styles.input} ref={inputRef ?? inputInsideRef} value={inputValue} type={inputType ? inputType : 'text'} onChange={changeHandler} onFocus={focusHandler} onBlur={blurHandler} />
             {children}
         </fieldset>
     );

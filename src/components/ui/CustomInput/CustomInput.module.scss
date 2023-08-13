@@ -13,7 +13,7 @@
     }
 
     .input {
-        min-width: 300px;
+        min-width: 245px;
         height: 50px;
         padding-top: .5em;
         padding-inline: 1em;
@@ -23,8 +23,28 @@
         color: #fff;
         font-size: 1.3em;
     }
+    svg{
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 35px;
+        height: 25px;
+        transform: translate(-25%, -50%);
+        opacity: .7;
+    }
 
     .move{
         transform: translate(-5%, -150%) scale(.85) !important;
+    }
+}
+
+.light{
+    legend{
+        color: #333;
+    }
+    .input{
+        background: #fff;
+        border: 1px solid #33333383;
+        color: black;
     }
 }

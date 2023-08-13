@@ -13,10 +13,10 @@ interface IBaseButtonProps {
   onClick?: ()=>void
 }
 
-const BaseButton: FC<IBaseButtonProps> = ({ text, isBig, icon, linkPath }) => {
+const BaseButton: FC<IBaseButtonProps> = ({ text, isBig, icon, linkPath, onClick }) => {
   const style = isBig ? `${styles.bigbutton} ${styles.button}` : styles.button
 
-  return linkPath ? (<Link className={style} href={linkPath}>{text}</Link>) : (<button className={style}>
+  return linkPath ? (<Link className={style} href={linkPath} onClick={onClick}>{text}</Link>) : (<button className={style} onClick={onClick}>
     {text}
     {icon && <FontAwesomeIcon className={styles.icon} icon={icon} />}
   </button>)

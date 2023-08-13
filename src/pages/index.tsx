@@ -2,9 +2,10 @@ import Head from 'next/head'
 import Header from '@/components/Header/Header'
 import Main from '@/components/Main/Main'
 import Footer from '@/components/Footer/Footer'
+import { footerLinkArr } from '@/helpers/footerLinkLists'
 
 export default function Home() {
-  const footerLinkArr = ['FAQ', 'Help Center', 'Account', 'Media Center', 'Investor Relations', 'Jobs', 'Redeem gift cards', 'Buy gift cards', 'Terms of Use', 'Privacy', 'Cookie Preferences', 'Corporate Information', 'Contact Us', 'Speed test', 'Legal Guarantee', 'Legal Notices', 'Only Netflix']
+  
 
   return (
     <>

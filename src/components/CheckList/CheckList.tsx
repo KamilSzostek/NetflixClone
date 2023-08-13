@@ -1,16 +1,17 @@
-import * as React from 'react';
+import {FC} from 'react';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import styles from './CheckList.module.scss'
 interface ICheckListProps {
     content: string[]
 }
 
-const CheckList: React.FunctionComponent<ICheckListProps> = ({content}) => {
-  const listElements = content.map((element, key)=>(<li key={key}><FontAwesomeIcon icon={faCheck} />{element}</li>))
-  
+const CheckList: FC<ICheckListProps> = ({content}) => {
+  const listElements = content.map((element, key)=>(<li key={key}><FontAwesomeIcon className={styles.icon} icon={faCheck} />{element}</li>))
+
     return (
-    <ul>
+    <ul className={styles.list}>
         {listElements}
     </ul>
   );
