@@ -6,20 +6,26 @@ import FieldWithValidation from '@/components/FieldWithValidation/FieldWithValid
 import CustomInput from '@/components/ui/CustomInput/CustomInput';
 import ChoosenPackage from '@/components/ChoosenPackage/ChoosenPackage';
 import BaseButton from '@/components/ui/BaseButton/BaseButton';
+import { footerLinkArr2 } from '@/helpers/footerLinkLists';
+import Footer from '@/components/Footer/Footer';
+import { checkValidity } from '@/helpers/validationFunctions';
 
 import styles from '../../../styles/SignUp.module.scss'
-import Footer from '@/components/Footer/Footer';
-import { footerLinkArr2 } from '@/helpers/footerLinkLists';
 
-interface IGiftOptionProps {
-}
-
-const GiftOption: React.FunctionComponent<IGiftOptionProps> = (props) => {
+const GiftOption: FC = () => {
     const [giftCode, setGiftCode] = useState('')
-    const giftCodeHandler = (e:React.ChangeEvent<HTMLInputElement>) => setGiftCode(e.currentTarget.value)
-    const errorHandler = (mes: string) => (`${mes} is required`)
+    const [validMessage, setValidMessage] = useState('')
+    const validMessageHandler = (message: string) => setValidMessage(message)
+
+    const giftCodeHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value
+        setGiftCode(value)
+        checkValidity({name:'Gift Card Pin or Code', value, validCondition: false, setMessage: validMessageHandler})
+    }
+
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        checkValidity({name:'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length < 7, setMessage: validMessageHandler})
     }
     return (
         <div className={styles.signup}>
@@ -30,7 +36,7 @@ const GiftOption: React.FunctionComponent<IGiftOptionProps> = (props) => {
                         <StepCounter currentStep={3} totalStepInteger={3} />
                         <h2>Enter your gift code</h2>
                         <form onSubmit={submitHandler}>
-                            <FieldWithValidation message={errorHandler('Gift Card Pin or Code')}>
+                            <FieldWithValidation message={validMessage}>
                                 <CustomInput placeholder='Gift Card Pin or Code' inputValue={giftCode} changeHandler={giftCodeHandler} isLight />
                             </FieldWithValidation>
                             <ChoosenPackage />

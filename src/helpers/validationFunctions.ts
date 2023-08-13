@@ -1,3 +1,10 @@
+interface IValidity{
+    name: string,
+    value: string,
+    validCondition: boolean,
+    setMessage: (message: string) => void
+}
+
 export function emailValidation(inputValue: string){    
     const emailRegex = new RegExp('^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$')
     if (inputValue.match(emailRegex))
@@ -12,3 +19,13 @@ export function passwordValidation(inputValue: string){
     else
         return false
 }
+
+export function checkValidity(
+    elements: IValidity
+  ) {
+    elements.value === ""
+      ? elements.setMessage(`${elements.name} is required`)
+      : (elements.validCondition
+      ? elements.setMessage(`Please, enter valid ${elements.name.toLowerCase()}`)
+      : elements.setMessage(""));
+  }

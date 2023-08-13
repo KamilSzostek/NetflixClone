@@ -9,28 +9,80 @@ import Master from '../../../../public/assets/MASTERCARD.png'
 import American from '../../../../public/assets/AMEX.png'
 import FieldWithValidation from '@/components/FieldWithValidation/FieldWithValidation';
 import BaseButton from '@/components/ui/BaseButton/BaseButton';
-
 import formStyles from '../../../styles/CreditOption.module.scss'
-import styles from '../../../styles/SignUp.module.scss'
 import CustomInput from '@/components/ui/CustomInput/CustomInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt, faCreditCard, faIdCard, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+import { faCalendarAlt, faCreditCard, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import ChoosenPackage from '@/components/ChoosenPackage/ChoosenPackage';
+
+import styles from '../../../styles/SignUp.module.scss'
+import { checkValidity } from '@/helpers/validationFunctions';
 
 const CreditOption: FC = () => {
     const [cardNumber, setCardNumber] = useState('')
+    const [cardNumberMessage, setCardNumberMessage] = useState('')
     const [expirationDate, setExpirationDate] = useState('')
+    const [expirationDateMessage, setExpirationDateMessage] = useState('')
     const [CVV, setCVV] = useState('')
+    const [CVVMessage, setCVVMessage] = useState('')
     const [firstName, setFirstName] = useState('')
+    const [firstNameMessage, setFirstNameMessage] = useState('')
     const [lastName, setLastName] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
+    const [lastNameMessage, setLastNameMessage] = useState('')
+    const onlyDigitsReg = new RegExp('[0-9]')
+    const onlyLettersReg = new RegExp('[A-z]')
 
-    //Function which set error message 
-    const errorHandler = (fieldName: string) => {
-        return `${fieldName} is required`
+    //Function is controling card number field which can contain only 16 digits separeted with space after every four digits
+    const cardNumberHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value;
+        const trimedValue = value.replaceAll(' ', '');
+        ((onlyDigitsReg.test(value) || value === '') && trimedValue.length <= 16) && setCardNumber(value);
+        (trimedValue.length % 4 === 0) && trimedValue.length <= 15 && value !== '' && setCardNumber(value + ' ');
     }
-    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    //Function is triming last white space when user push 'Backspace' button
+    const cardNumberKeyHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        e.key === "Backspace" && setCardNumber(cardNumber.trimEnd())
+    }
+    const cardNumberMessageHandler = (message: string) => setCardNumberMessage(message)
+    //Function is controling correct format of expiration date
+    const expirationDateHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value;
+        (onlyDigitsReg.test(value) || value === '') && value.length <= 5 && setExpirationDate(value)
+        value.length === 2 && setExpirationDate(value + '/')
+    }
+    //If caret is next to slash character and user push 'Backspace' button, function will delete slash
+    const expirationDateKeyHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        e.key === "Backspace" && e.currentTarget.value.length === 3 && setExpirationDate(expirationDate.replace('/', ''))
+    }
+    const expirationDateMessageHandler = (message: string) => setExpirationDateMessage(message)
+    //Function is controling CVV code contains only digits and has length less than 4
+    const CVVHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value;
+        (onlyDigitsReg.test(value) || value === '') && value.length <= 3 && setCVV(value)
+    }
+    const CVVMessageHandler = (message: string) => setCVVMessage(message)
+    //Function is controling firstName input contains only letters
+    const firstNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value;
+        (onlyLettersReg.test(value) || value === '') && setFirstName(value)
+    }
+    const firstNameMessageHandler = (message: string) => setFirstNameMessage(message)
+    //Function is controling lastName input contains only letters
+    const lastNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.currentTarget.value;
+        (onlyLettersReg.test(value) || value === '') && setLastName(value)
+    }
+    const lastNameMessageHandler = (message: string) => setLastNameMessage(message)
 
+    //Function prevent send of form and check which fields are valid, if field is invalid then function will set error-message
+    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const expirationDateCondition = (parseInt(expirationDate.substring(0, 3)) > 12 || parseInt(expirationDate.substring(3, 5)) < new Date().getFullYear() - 2001)
+        checkValidity({ name: 'Card number', value: cardNumber, validCondition: cardNumber.length < 17, setMessage: cardNumberMessageHandler })
+        checkValidity({ name: 'Expiration date', value: expirationDate, validCondition: expirationDateCondition, setMessage: expirationDateMessageHandler })
+        checkValidity({ name: 'CVV', value: CVV, validCondition: CVV.length < 3, setMessage: CVVMessageHandler })
+        checkValidity({ name: 'First name', value: firstName, validCondition: firstName.length >= 2, setMessage: firstNameMessageHandler })
+        checkValidity({ name: 'Last name', value: lastName, validCondition: lastName.length >= 2, setMessage: lastNameMessageHandler })
     }
 
     return (
@@ -47,28 +99,28 @@ const CreditOption: FC = () => {
                             <Image src={American} alt='master' width={50} height={30} />
                         </div>
                         <form className={formStyles.form} onSubmit={submitHandler}>
-                            <FieldWithValidation message={errorHandler('Card number')}>
-                                <CustomInput placeholder='Card number' inputValue={cardNumber} isLight>
+                            <FieldWithValidation message={cardNumberMessage}>
+                                <CustomInput placeholder='Card number' inputValue={cardNumber} changeHandler={cardNumberHandler} keyDownHandler={cardNumberKeyHandler} isLight>
                                     <FontAwesomeIcon icon={faCreditCard} />
                                 </CustomInput>
                             </FieldWithValidation>
                             <div className={formStyles.container}>
-                                <FieldWithValidation message={errorHandler('Expiration date')}>
-                                    <CustomInput placeholder='Expiration date' inputValue={expirationDate} isLight>
+                                <FieldWithValidation message={expirationDateMessage}>
+                                    <CustomInput placeholder='Expiration date' inputValue={expirationDate} changeHandler={expirationDateHandler} keyDownHandler={expirationDateKeyHandler} isLight>
                                         <FontAwesomeIcon icon={faCalendarAlt} />
                                     </CustomInput>
                                 </FieldWithValidation>
-                                <FieldWithValidation message={errorHandler('CVV code')}>
-                                    <CustomInput placeholder='CVV' inputValue={CVV} isLight>
+                                <FieldWithValidation message={CVVMessage}>
+                                    <CustomInput placeholder='CVV' inputValue={CVV} changeHandler={CVVHandler} isLight>
                                         <FontAwesomeIcon icon={faQuestionCircle} />
                                     </CustomInput>
                                 </FieldWithValidation>
                             </div>
-                            <FieldWithValidation message={errorHandler('First name')} >
-                                <CustomInput placeholder='First Name' inputValue={firstName} isLight />
+                            <FieldWithValidation message={firstNameMessage} >
+                                <CustomInput placeholder='First Name' inputValue={firstName} changeHandler={firstNameHandler} isLight />
                             </FieldWithValidation>
-                            <FieldWithValidation message={errorHandler('Last name')}>
-                                <CustomInput placeholder='Last Name' inputValue={lastName} isLight />
+                            <FieldWithValidation message={lastNameMessage}>
+                                <CustomInput placeholder='Last Name' inputValue={lastName} changeHandler={lastNameHandler} isLight />
                             </FieldWithValidation>
                             <ChoosenPackage>
                                 <p>

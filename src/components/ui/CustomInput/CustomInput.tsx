@@ -6,6 +6,7 @@ interface ICustomInputProps {
     placeholder: string,
     inputRef?: RefObject<HTMLInputElement>,
     changeHandler?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    keyDownHandler?: (e: React.KeyboardEvent<HTMLInputElement>) => void
     inputBlur?: (input: HTMLInputElement, type: string)=>void,
     inputValue: string,
     inputType?: string,
@@ -13,7 +14,7 @@ interface ICustomInputProps {
     children?: ReactElement
 }
 
-const CustomInput: FC<ICustomInputProps> = ({ children, placeholder, inputRef, inputValue, changeHandler, inputType, inputBlur, isLight }) => {
+const CustomInput: FC<ICustomInputProps> = ({ children, placeholder, inputRef, inputValue, changeHandler, inputType, inputBlur, keyDownHandler, isLight }) => {
     const legendRef = useRef<HTMLLegendElement>(null)
     const inputInsideRef = useRef<HTMLInputElement>(null)
     
@@ -30,7 +31,7 @@ const CustomInput: FC<ICustomInputProps> = ({ children, placeholder, inputRef, i
     return (
         <fieldset className={fieldsetStyle}>
             <legend ref={legendRef} onClick={focusHandler}>{placeholder}</legend>
-            <input className={styles.input} ref={inputRef ?? inputInsideRef} value={inputValue} type={inputType ? inputType : 'text'} onChange={changeHandler} onFocus={focusHandler} onBlur={blurHandler} />
+            <input className={styles.input} ref={inputRef ?? inputInsideRef} value={inputValue} type={inputType ? inputType : 'text'} onChange={changeHandler} onFocus={focusHandler} onBlur={blurHandler} onKeyDown={keyDownHandler}/>
             {children}
         </fieldset>
     );
