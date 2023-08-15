@@ -18,7 +18,7 @@ const SignUp: FC = () => {
     function setNewMember(){
         let newMember;
         try{
-            newMember = sessionStorage.getItem('newMember')
+            newMember = sessionStorage.getItem('newMember')!
             return newMember
         }
         catch(e){
