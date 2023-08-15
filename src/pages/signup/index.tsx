@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import Footer from '@/components/Footer/Footer';
 import NavBar from '@/components/NavBar/NavBar';
 import Image from 'next/image';
@@ -15,7 +15,17 @@ import StepCounter from '@/components/StepCounter/StepCounter';
 import styles from '../../styles/SignUp.module.scss'
 
 const SignUp: FC = () => {
-    const [email, setEmail] = useState('')
+    function setNewMember(){
+        let newMember;
+        try{
+            newMember = sessionStorage.getItem('newMember')
+            return newMember
+        }
+        catch(e){
+            return ''
+        }
+    }
+    const [email, setEmail] = useState(setNewMember())
     const [emailValidMessage, setEmaiValidMessage] = useState('')
     const [password, setPassword] = useState('')
     const [passwordValidMessage, setPasswordValidMessage] = useState('')
@@ -23,6 +33,10 @@ const SignUp: FC = () => {
     const [showFirstSection, setShowFirstSection] = useState(true)
     const [showSecondSection, setShowSecondSection] = useState(false)
     const [showThirdSection, setShowThirdSection] = useState(false)
+
+    useEffect(() => {
+        emialInputRef.current?.focus()
+    })
 
     const emialInputRef = useRef<HTMLInputElement>(null)
     const passwordInputRef = useRef<HTMLInputElement>(null)

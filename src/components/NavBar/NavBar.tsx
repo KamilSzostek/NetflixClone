@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useLogInState } from '@/hooks/useLogInState';
 import Link from 'next/link';
 import BaseButton from '../ui/BaseButton/BaseButton';
 import Image from 'next/image';
@@ -17,13 +18,16 @@ interface INavBarProps {
 }
 
 const NavBar: FC<INavBarProps> = ({ linkLogo, showLanguageSelect, showSignButton, isStatic }) => {
+    const loggedIn = useLogInState()
+
+    const logoutHandler = () => sessionStorage.removeItem('newMember')
     const navStyle = isStatic ? `${styles.navbar} ${styles.static}` : `${styles.navbar}`
     return (<nav className={navStyle}>
         {linkLogo ? <Link href='/'><Image src={LogoNetflix} alt="logo netflix" priority/></Link> : <Image src={LogoNetflix} alt="logo netflix" priority/>}
         {
             (<div>
                 { showLanguageSelect && <ResponsiveSelect icon={faGlobe} name='language' id='lang' />}
-                { showSignButton && <BaseButton text='sign in' linkPath='/login'/>}
+                { showSignButton && (loggedIn ? <BaseButton text='sign out' linkPath='/' onClick={logoutHandler}/> : <BaseButton text='sign in' linkPath='/login'/>)}
             </div>)
         }
     </nav>);

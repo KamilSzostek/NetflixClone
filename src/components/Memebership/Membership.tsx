@@ -20,8 +20,10 @@ const Membership: FC = () => {
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (emailValidation(inputValue))
+        if (emailValidation(inputValue)){
+            sessionStorage.setItem('newMember', inputValue)          
             router.push('/signup')
+        }
         else {
             inputRef.current?.classList.add('red-border')
             validRef.current?.classList.add('opacity-1')

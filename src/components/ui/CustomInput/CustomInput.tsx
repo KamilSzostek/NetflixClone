@@ -17,7 +17,7 @@ interface ICustomInputProps {
 const CustomInput: FC<ICustomInputProps> = ({ children, placeholder, inputRef, inputValue, changeHandler, inputType, inputBlur, keyDownHandler, isLight }) => {
     const legendRef = useRef<HTMLLegendElement>(null)
     const inputInsideRef = useRef<HTMLInputElement>(null)
-    
+
     const fieldsetStyle = isLight ? `${styles.fieldset} ${styles.light}` : styles.fieldset
 
     const focusHandler = () => {
