@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import NavBar from '@/components/NavBar/NavBar';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
 import StepCounter from '@/components/StepCounter/StepCounter';
 import FieldWithValidation from '@/components/FieldWithValidation/FieldWithValidation';
@@ -10,43 +9,40 @@ import { footerLinkArr2 } from '@/helpers/footerLinkLists';
 import Footer from '@/components/Footer/Footer';
 import { checkValidity } from '@/helpers/validationFunctions';
 
-import styles from '../../../styles/SignUp.module.scss'
+import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 
 const GiftOption: FC = () => {
     const [giftCode, setGiftCode] = useState('')
     const [validMessage, setValidMessage] = useState('')
     const validMessageHandler = (message: string) => setValidMessage(message)
 
-    const giftCodeHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const giftCodeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
         setGiftCode(value)
-        checkValidity({name:'Gift Card Pin or Code', value, validCondition: false, setMessage: validMessageHandler})
+        checkValidity({ name: 'Gift Card Pin or Code', value, validCondition: false, setMessage: validMessageHandler })
     }
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        checkValidity({name:'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length < 7, setMessage: validMessageHandler})
+        checkValidity({ name: 'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length < 7, setMessage: validMessageHandler })
     }
     return (
-        <div className={styles.signup}>
-            <NavBar isStatic linkLogo showSignButton />
-            <main>
-                <SignUpSection width='medium' showSection={true} isTextLeft>
-                    <>
-                        <StepCounter currentStep={3} totalStepInteger={3} />
-                        <h2>Enter your gift code</h2>
-                        <form onSubmit={submitHandler}>
-                            <FieldWithValidation message={validMessage}>
-                                <CustomInput placeholder='Gift Card Pin or Code' inputValue={giftCode} changeHandler={giftCodeHandler} isLight />
-                            </FieldWithValidation>
-                            <ChoosenPackage />
-                            <BaseButton text='Redeem Gift Code' />
-                        </form>
-                    </>
-                </SignUpSection>
-            </main>
-            <Footer linkList={footerLinkArr2} lightBg/>
-        </div>
+        <SignUpLayout>
+            <SignUpSection width='medium' showSection={true} isTextLeft>
+                <>
+                    <StepCounter currentStep={3} totalStepInteger={3} />
+                    <h2>Enter your gift code</h2>
+                    <form onSubmit={submitHandler}>
+                        <FieldWithValidation message={validMessage}>
+                            <CustomInput placeholder='Gift Card Pin or Code' inputValue={giftCode} changeHandler={giftCodeHandler} isLight />
+                        </FieldWithValidation>
+                        <ChoosenPackage />
+                        <BaseButton text='Redeem Gift Code' />
+                    </form>
+                </>
+            </SignUpSection>
+            <Footer linkList={footerLinkArr2} lightBg />
+        </SignUpLayout>
     );
 };
 

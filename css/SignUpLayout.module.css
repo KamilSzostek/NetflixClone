@@ -1,0 +1,67 @@
+.signup {
+  min-height: 100vh;
+  background: #fff;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+}
+.signup main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 62vh;
+  padding-inline: 2em;
+  padding-top: 50px;
+  padding-bottom: 175px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+.signup nav a {
+  background: none;
+  color: #333;
+  font-size: 1.9rem;
+  font-weight: normal;
+}
+.signup nav a:hover {
+  background: none;
+  text-decoration: underline;
+}
+.signup article, .signup .adplan {
+  color: rgba(51, 51, 51, 0.6823529412);
+}
+.signup article a, .signup .adplan a {
+  display: inline;
+  width: auto;
+  height: auto;
+  font-size: 1.2rem;
+  color: rgba(0, 0, 255, 0.605);
+}
+.signup article a:hover, .signup .adplan a:hover {
+  text-decoration: underline;
+}
+.signup .adplan {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-block: 2em;
+  padding: 1em 2em;
+  background-color: #e5e5e5;
+}
+.signup .adplan .icon {
+  width: 25px;
+  height: 15px;
+}
+.signup .adplan span {
+  font-size: 1.2rem;
+}
+.signup .images {
+  display: flex;
+  gap: 5px;
+}
+.signup article {
+  margin-bottom: 5em;
+}
+.signup article p {
+  margin-bottom: 1em;
+  font-size: 1.3rem;
+}/*# sourceMappingURL=SignUpLayout.module.css.map */

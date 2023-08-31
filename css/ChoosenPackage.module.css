@@ -1,0 +1,59 @@
+.package {
+  color: rgba(0, 0, 0, 0.5);
+}
+.package div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
+  padding-inline: 1em;
+  background-color: rgba(229, 229, 229, 0.5058823529);
+  border-radius: 0.5em;
+  font-size: 1.4rem;
+}
+.package div a {
+  margin: 0;
+  padding: 1.5em;
+  width: auto;
+  color: rgb(80, 80, 221);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.package div div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  margin-top: 1em;
+  background-color: rgba(0, 0, 0, 0);
+  gap: 5px;
+}
+.package div div span:first-child {
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: bold;
+}
+.package p {
+  font-size: 1.2rem !important;
+  font-weight: bold;
+  text-align: left;
+}
+.package p a {
+  display: inline;
+  color: rgb(80, 80, 221);
+  font-size: inherit;
+}
+.package label {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+.package label input[type=checkbox] {
+  min-width: 20px;
+  min-height: 20px;
+  margin-right: 10px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.package label span {
+  font-size: 1.3rem;
+  text-align: left;
+}/*# sourceMappingURL=ChoosenPackage.module.css.map */

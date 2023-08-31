@@ -1,0 +1,96 @@
+.form {
+  width: clamp(320px, 320px + 20vw, 1000px);
+  margin-top: 10em;
+}
+.form h1 {
+  width: 100%;
+  padding: 0;
+  border-bottom: 1px solid #837e7e;
+}
+.form button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7176470588);
+  cursor: pointer;
+}
+.form div {
+  display: flex;
+  gap: 1em;
+}
+.form div .image {
+  position: relative;
+  width: clamp(50px, 50px + 2vw, 250px);
+  height: clamp(50px, 50px + 2vw, 250px);
+}
+.form div .image img {
+  width: inherit;
+  height: inherit;
+  border-radius: 1em;
+}
+.form div .image button {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.form div .image button svg {
+  padding: 0.25em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5254901961);
+  border-radius: 50%;
+}
+.form div .settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.form div .settings section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  border-bottom: 1px solid rgba(131, 126, 126, 0.4196078431);
+  margin-top: 0.5em;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+}
+.form div .settings section fieldset {
+  width: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: none;
+  font-size: clamp(0.8rem, 0.9rem + 2vw, 1.2rem);
+}
+.form div .settings section fieldset label {
+  font-size: clamp(1rem, 1rem + 2vw, 1.5rem);
+  margin-top: 0.5em;
+  color: rgba(255, 255, 255, 0.7176470588);
+}
+.form div .settings section fieldset input {
+  width: inherit;
+  padding: 0.35em 1em;
+  background-color: rgba(120, 112, 112, 0.4666666667);
+  border: #837e7e;
+  color: #fff;
+  font-size: clamp(1rem, 1rem + 2vw, 1.5rem);
+  outline: none;
+}
+.form div .settings section fieldset .validnick {
+  display: flex;
+  justify-content: space-between;
+}
+.form div .settings section label {
+  color: rgba(255, 255, 255, 0.7176470588);
+}
+.form div .settings section label p {
+  margin-bottom: 0.5em;
+  font-size: clamp(1rem, 1rem + 2vw, 1.5rem);
+}
+.form div .settings section label select {
+  background: rgba(0, 0, 0, 0.8235294118);
+  border-color: rgba(255, 255, 255, 0.7568627451);
+  color: rgba(255, 255, 255, 0.7568627451);
+}/*# sourceMappingURL=EditProfile.module.css.map */

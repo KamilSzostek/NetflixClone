@@ -1,0 +1,129 @@
+.form {
+  margin-top: 100px;
+  max-width: 500px;
+  font-size: 1.2rem;
+  transform: scale(1.01);
+}
+.form h2 {
+  margin-bottom: 2rem;
+  text-transform: capitalize;
+}
+.form fieldset {
+  position: relative;
+  width: 100%;
+}
+.form fieldset input {
+  width: inherit;
+}
+.form label {
+  display: flex;
+  align-items: center;
+}
+.form label input[type=checkbox]:checked {
+  background: grey;
+  color: #333;
+}
+.form label input[type=checkbox] {
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: 0;
+  background: lightgray;
+  height: 16px;
+  width: 16px;
+  border: none;
+  border-radius: 10%;
+  color: white;
+  color: #333;
+}
+.form label input[type=checkbox]:after {
+  content: " ";
+  position: relative;
+  left: 40%;
+  top: 20%;
+  width: 15%;
+  height: 40%;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(50deg);
+  display: none;
+}
+.form label input[type=checkbox]:checked:after {
+  display: block;
+}
+.form button {
+  display: block;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  width: 100%;
+  height: 50px;
+  font-size: 1.8rem;
+}
+.form div a {
+  color: #948d8d;
+}
+.form .showpass {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  text-transform: uppercase;
+  transform: translate(-20%, -50%);
+  opacity: 0.5;
+  cursor: pointer;
+}
+.form .showpass:hover {
+  opacity: 1;
+}
+.form .showpass span {
+  padding: 0.25em 0.5em;
+}
+.form .remember {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5em;
+}
+.form .remember input {
+  margin-right: 0.5em;
+}
+.form .recaptcha {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  align-items: flex-start;
+  gap: 2em;
+  color: #7f7878;
+}
+.form .recaptcha div {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+.form .recaptcha h4 a {
+  color: #fff;
+}
+.form .recaptcha p span, .form .recaptcha p a {
+  color: blue;
+  cursor: pointer;
+}
+.form .recaptcha p span:hover, .form .recaptcha p a:hover {
+  text-decoration: underline;
+}
+
+.invalid {
+  border-bottom: 2px solid orange !important;
+}
+
+@media (min-width: 740px) {
+  .form {
+    margin-bottom: 5em;
+    padding: 4em;
+    padding-bottom: 7em;
+    background-color: rgba(0, 0, 0, 0.8078431373);
+  }
+}/*# sourceMappingURL=SignInForm.module.css.map */

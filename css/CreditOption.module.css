@@ -1,0 +1,6 @@
+@media (min-width: 576px) {
+  .form .container {
+    display: flex;
+    gap: 1em;
+  }
+}/*# sourceMappingURL=CreditOption.module.css.map */

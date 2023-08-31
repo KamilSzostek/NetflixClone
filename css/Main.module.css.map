@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/components/Main/Main.module.scss","Main.module.css"],"names":[],"mappings":"AACI;EACI,kBAAA;EACA,gCAAA;ACAR;ADEQ;EACI,WAAA;EACA,YAAA;EACA,kCAAA;EACA,uBAAA;ACAZ;ADGQ;EACI,kBAAA;EACA,QAAA;EACA,SAAA;EACA,UAAA;EACA,WAAA;ACDZ;ADGQ;EACI,QAAA;EACA,SAAA;EACA,UAAA;EACA,WAAA;ACDZ","file":"Main.module.css"}

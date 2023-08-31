@@ -1,0 +1,81 @@
+.dialing {
+  position: absolute;
+  top: 50%;
+  right: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.arrowdown {
+  width: 12px;
+  margin-left: 15px;
+  transition: transform 0.3s;
+}
+
+.list {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 500px;
+  padding-block: 0.5em;
+  list-style: none;
+  background: #595959;
+  color: black;
+  border-bottom-left-radius: 0.25em;
+  border-bottom-right-radius: 0.25em;
+  text-align: right;
+  transform: translateY(99%);
+  overflow-y: auto;
+  z-index: 1;
+}
+.list li {
+  display: flex;
+  justify-content: space-between;
+  margin-inline: 1.5em;
+  padding: 1em;
+  border-radius: 0.25em;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.list li:hover {
+  background: #737373;
+}
+.list .selected {
+  background: #737373;
+}
+
+.static {
+  position: static;
+  height: 40px;
+  padding-inline: 0.5em;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-right: none;
+  transform: translateY(0);
+}
+
+.light {
+  width: 340px;
+  transform: translateY(100%);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+.light li {
+  margin: 0;
+  padding: 0.5em;
+  border-radius: 0;
+  color: black;
+  font-size: 1.6rem;
+}
+.light li:hover {
+  background-color: rgb(230, 227, 227);
+}
+.light .selected {
+  background: rgb(230, 227, 227);
+}/*# sourceMappingURL=DialingSelect.module.css.map */

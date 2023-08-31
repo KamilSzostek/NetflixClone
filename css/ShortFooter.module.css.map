@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/components/ShortFooter/ShortFooter.module.scss","ShortFooter.module.css"],"names":[],"mappings":"AAAA;EACI,WAAA;EACA,kBAAA;EACA,6CAAA;ACCJ;ADCI;EACI,oBAAA;ACCR;ADEI;EACI,aAAA;EACA,eAAA;ACAR;ADEQ;EACI,kBAAA;EACA,mCAAA;EACA,iBAAA;ACAZ;;ADKA;EACI;IACI,oBAAA;ECFN;EDIM;IACI,kBAAA;ECFV;AACF","file":"ShortFooter.module.css"}

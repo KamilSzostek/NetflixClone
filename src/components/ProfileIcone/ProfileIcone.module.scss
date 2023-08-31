@@ -1,0 +1,63 @@
+.profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #7e7c7c;
+    cursor: pointer;
+
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: clamp(102px, 102px + 5vw, 202px);
+        height: clamp(102px, 102px + 5vw, 202px);
+        border-radius: 1em;
+        transition: background .3s;
+
+        img {
+            width: clamp(100px, 100px + 5vw, 200px);
+            height: clamp(100px, 100px + 5vw, 200px);
+            border: 2px solid rgba(255, 255, 255, 0);
+            border-radius: 1em;
+        }
+
+        svg {
+            width: clamp(50px, 50px + 5vw, 100px);
+            height: clamp(50px, 50px + 5vw, 100px);
+        }
+        
+    }
+    .edit{
+        position: relative;
+        &::after{
+            content:'';
+            position: absolute;
+            left: 3px;right: 3px;
+            bottom: 3px;top: 3px;
+            background: #00000091;
+            border-radius: inherit;
+            z-index: 0;
+        }
+        svg{
+            position: absolute;
+            width: clamp(35px, 35px + 5vw, 70px);
+            height: clamp(35px, 35px + 5vw, 70px);
+            color: #fff;
+            z-index: 10;
+        }
+    }
+    figcaption{
+        margin-top: -50px;
+        transition: color .3s;
+    }
+    &:hover {
+        div{
+            background-color: #fff;
+        }
+        figcaption{
+            color: #fff;
+        }
+    }
+
+}

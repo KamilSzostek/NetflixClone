@@ -1,0 +1,22 @@
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: 3em;
+}
+.navbar img {
+  width: 148px;
+  height: 80px;
+}
+.navbar div {
+  display: flex;
+}
+
+.static {
+  position: static;
+}/*# sourceMappingURL=NavBar.module.css.map */

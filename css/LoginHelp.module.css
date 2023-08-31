@@ -1,0 +1,21 @@
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 100px;
+  padding-inline: 2em;
+  background-image: url("../../public/assets/crown-bg.jpg");
+}
+.login nav div a {
+  background: none;
+  font-size: 1.8rem;
+  color: orangered;
+}
+.login nav div a:hover {
+  background: none;
+  color: none;
+}
+.login main {
+  margin-bottom: 7em;
+}/*# sourceMappingURL=LoginHelp.module.css.map */

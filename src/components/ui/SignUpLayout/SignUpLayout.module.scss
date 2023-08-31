@@ -1,0 +1,74 @@
+.signup {
+    min-height: 100vh;
+    background: #fff;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+
+    main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 62vh;
+        padding-inline: 2em;
+        padding-top: 50px;
+        padding-bottom: 175px;
+        border-top: 1px solid rgba(0, 0, 0, 0.2);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    nav {
+        a {
+            background: none;
+            color: #333;
+            font-size: 1.9rem;
+            font-weight: normal;
+
+            &:hover {
+                background: none;
+                text-decoration: underline;
+            }
+        }
+    }
+    article, .adplan {
+        color: #333333ae;
+        a {
+            display: inline;
+            width: auto;
+            height: auto;
+            font-size: 1.2rem;
+            color: rgba(0, 0, 255, 0.605);
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+    }
+    .adplan {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-block: 2em;
+        padding: 1em 2em;
+        background-color: #e5e5e5;
+
+        .icon {
+            width: 25px;
+            height: 15px;
+        }
+
+        span {
+            font-size: 1.2rem;
+        }
+    }
+    .images{
+        display: flex;
+        gap: 5px;
+    }
+    article{
+        margin-bottom: 5em;
+        p{
+            margin-bottom: 1em;
+            font-size: 1.3rem;
+        }
+    }
+}

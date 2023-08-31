@@ -67,6 +67,9 @@ a:hover{
 .turnaround{
   transform: rotate(180deg);
 }
+.d-none{
+  display: none;
+}
 
 @media (min-width: 970px) {
   h1 {

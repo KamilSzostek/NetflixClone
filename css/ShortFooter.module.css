@@ -1,0 +1,26 @@
+.footer {
+  width: 100%;
+  padding-block: 2em;
+  background-color: rgba(0, 0, 0, 0.8078431373);
+}
+.footer h3 {
+  margin-bottom: 1.5em;
+}
+.footer div {
+  display: flex;
+  flex-wrap: wrap;
+}
+.footer div span {
+  margin-bottom: 1em;
+  width: clamp(150px, 15% + 1vw, 20%);
+  font-size: 1.4rem;
+}
+
+@media (min-width: 740px) {
+  .footer {
+    padding-inline: 22vw;
+  }
+  .footer div {
+    margin-bottom: 2em;
+  }
+}/*# sourceMappingURL=ShortFooter.module.css.map */

@@ -1,0 +1,62 @@
+.footer {
+  padding: 1em 2em;
+}
+.footer ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin-bottom: 2em;
+}
+.footer ul li {
+  margin: 0.5em;
+  width: calc(50% - 20px);
+  text-decoration: underline;
+  font-size: clamp(1rem, 1rem + 0.5vw, 1.8rem);
+}
+.footer h4 {
+  margin-top: 0.5em;
+  font-size: clamp(1.2rem, 1.2rem + 0.5vw, 2rem);
+}
+
+.lightbg {
+  padding-left: 2vw;
+  background: #F3F3F3;
+  color: rgba(51, 51, 51, 0.7333333333);
+}
+.lightbg h3 {
+  margin-block: 1em;
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+.lightbg ul {
+  max-width: 1000px;
+}
+.lightbg ul li {
+  font-size: clamp(1rem, 1rem + 0.5vw, 1.3rem);
+  text-decoration: none;
+}
+.lightbg ul li:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.lightbg select {
+  background: #fff;
+  color: #333;
+  border-radius: 0;
+}
+
+@media (min-width: 526px) {
+  .footer ul li {
+    width: calc(30% - 20px);
+  }
+}
+@media (min-width: 756px) {
+  .footer ul li {
+    width: calc(25% - 20px);
+  }
+}
+@media (min-width: 992px) {
+  .footer ul li {
+    width: calc(25% - 20px);
+  }
+}/*# sourceMappingURL=Footer.module.css.map */

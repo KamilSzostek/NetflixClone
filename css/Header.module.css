@@ -1,0 +1,57 @@
+.header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 20px;
+  min-height: 500px;
+  height: 50vh;
+  margin-bottom: 1em;
+  padding-bottom: 3em;
+  text-align: center;
+}
+.header .herobg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("../../../public/assets/netflix-bg.jpg");
+  background-position: 0 0;
+  z-index: -1;
+  filter: brightness(50%);
+}
+.header .herobg::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 75%;
+  background-color: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 40px 30px rgba(0, 0, 0, 0.35);
+}
+.header .herobg::after {
+  content: "";
+  position: absolute;
+  left: -10%;
+  top: 75%;
+  right: -10%;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  box-shadow: 30px -40px 30px rgba(0, 0, 0, 0.35);
+}
+.header a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  margin-inline: auto;
+}
+
+@media (min-width: 992px) {
+  .header {
+    min-height: 700px;
+    height: 73vh;
+  }
+}/*# sourceMappingURL=Header.module.css.map */

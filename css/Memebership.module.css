@@ -1,0 +1,47 @@
+.newsletter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.newsletter h3 {
+  padding-inline: 2em;
+  padding-bottom: 0.5em;
+}
+.newsletter form div {
+  position: relative;
+  margin-bottom: 3em;
+}
+.newsletter form div small {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 0.5em;
+  color: rgba(239, 44, 44, 0.745);
+  font-size: 1.1rem;
+  transform: opacity 0.3s;
+}
+.newsletter form div small .icon {
+  width: 15px;
+  height: 15px;
+}
+
+@media (min-width: 576px) {
+  .newsletter {
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }
+  .newsletter form {
+    display: flex;
+    gap: 10px;
+  }
+  .newsletter form div small {
+    font-size: 1.2rem;
+  }
+  .newsletter form div small img {
+    width: 17px;
+    height: 17px;
+  }
+}/*# sourceMappingURL=Memebership.module.css.map */

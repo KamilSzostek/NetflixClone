@@ -1,0 +1,17 @@
+.list {
+  font-size: 1.8rem;
+  text-align: left;
+  list-style: none;
+}
+.list li {
+  margin-bottom: 1em;
+  width: 80%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+}
+.list li .icon {
+  height: 25px;
+  color: red;
+}/*# sourceMappingURL=CheckList.module.css.map */
