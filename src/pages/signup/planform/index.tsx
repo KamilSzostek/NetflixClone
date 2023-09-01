@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import Link from 'next/link';
+import { selectPlan } from '@/store/typePlan';
 import Footer from '@/components/Footer/Footer';
 import CheckList from '@/components/CheckList/CheckList';
 import PlanTable from '@/components/PlanTable/MembershipPlan';
@@ -13,10 +14,10 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 
 import styles from '../../../components/ui/SignUpLayout/SignUpLayout.module.scss'
-import { selectPlan } from '@/store/typePlan';
 
 export interface IPlan {
-    _id: string;
+    [key: string]: any
+    _id: string
     name: string
     price: string
     quality: string
@@ -26,26 +27,32 @@ export interface IPlan {
 const planArr = ['Watch all you want.', 'Recommendations just for you.', 'Change or cancel your plan anytime.']
 const linkArr = ['FAQ', 'Cancel Membership', 'Help Center', 'Netflix Shop', 'Terms of Use', 'Privacy', 'Cookie Preferences', 'Corporate Information', 'Impressum']
 
+export const initialSelectedPlan = {
+    _id: '',
+    name: '',
+    price: '',
+    quality: '',
+    resolution: ''
+}
+
 const PlanForm: FC = () => {
     const dispatch = useDispatch()
+    const newAccountToAdd = sessionStorage.getItem('newMembership')
     const router = useRouter()
-    const initialSelectedPlan = {
-        _id: '',
-        name: '',
-        price: '',
-        quality: '',
-        resolution: ''
-    }
     const [selectedPlan, setSelectedPlan] = useState(initialSelectedPlan)
     const selectPlanHandler = (plan: IPlan) => setSelectedPlan(plan)
 
     const clickHandler = () => {
-        if (selectedPlan === initialSelectedPlan)
-            alert('Select any plan')
-        else {
-            dispatch(selectPlan(selectedPlan))
-            router.push('/signup/paymentPicker')
+        if (newAccountToAdd) {
+            if (selectedPlan === initialSelectedPlan)
+                alert('Select any plan')
+            else {
+                dispatch(selectPlan(selectedPlan))
+                router.push('/signup/paymentPicker')
+            }
         }
+        else
+            router.push('/signup')
     }
 
     return (

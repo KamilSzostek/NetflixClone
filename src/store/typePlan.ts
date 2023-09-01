@@ -22,5 +22,6 @@ export const planSlice = createSlice({
 export const { selectPlan } = planSlice.actions;
 
 export const priceSelector = (state: RootState) => state.plan.value.price;
+export const planSelector = (state: RootState) => state.plan.value;
 
 export default planSlice.reducer;

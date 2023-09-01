@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { IPlan } from '@/pages/signup/planform';
 
 import styles from './MembershipPlan.module.scss'
-import { IPlan } from '@/pages/signup/planform';
 
 interface IMembershipPlanProps {
     selectedPlan: IPlan,
@@ -13,54 +13,36 @@ interface IMembershipPlanProps {
 const PlanTable: FC<IMembershipPlanProps> = ({ selectedPlan, selectPlan }) => {
     const [plans, setPlans] = useState([])
     const [showAllPlans, setShowAllPlans] = useState(false)
-    const planMap = new Map()
     const extraPlanId = 2
 
     useEffect(() => {
         fetch('/api/plans').then(res => res.json()).then(data => setPlans(data)).catch(err => console.error(err))
     }, [])
 
-    const plansTableHeader = plans.map((plan: IPlan, key) => {
-        if (key !== extraPlanId)
-            return <th key={key} id={key.toString()} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{plan.name}</th>
-        else {
-            if (showAllPlans)
-                return <th key={key} id={key.toString()} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{plan.name}</th>
+    function extraColumnHandler(key: number, selectedPlanId: string, plan: IPlan, isBody: boolean, propsName?: string) {
+        if (key !== extraPlanId) {
+            if (isBody)
+                return <td key={key} id={key.toString()} className={selectedPlanId === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{propsName ? plan[propsName] : <FontAwesomeIcon icon={faCheck} />}</td>
+            else
+                return <th key={key} id={key.toString()} className={selectedPlanId === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{propsName ? plan[propsName] : <FontAwesomeIcon icon={faCheck} />}</th>
         }
-    })
+        else {
+            if (showAllPlans) {
+                if (isBody)
+                    return <td key={key} id={key.toString()} className={selectedPlanId === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{propsName ? plan[propsName] : <FontAwesomeIcon icon={faCheck} />}</td>
+                else
+                    return <th key={key} id={key.toString()} className={selectedPlanId === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{propsName ? plan[propsName] : <FontAwesomeIcon icon={faCheck} />}</th>
+            }
 
-    const tableBodyFirstRow = plans.map((plan: IPlan, key) => {
-        if (key !== extraPlanId)
-            return <th key={key} id={key.toString()} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{plan.price && '€'}{plan.price}</th>
-        else {
-            if (showAllPlans)
-                return <th key={key} id={key.toString()} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{plan.price && '€'}{plan.price}</th>
         }
-    })
-    const tableBodySecondRow = plans.map((plan: IPlan, key) => {
-        if (key !== extraPlanId)
-            return <th key={key} id={key.toString()} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{plan.quality}</th>
-        else {
-            if (showAllPlans)
-                return <th key={key} id={key.toString()} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{plan.quality}</th>
-        }
-    })
-    const tableBodyThirdRow = plans.map((plan: IPlan, key) => {
-        if (key !== extraPlanId)
-            return <th key={key} id={key.toString()} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{plan.resolution}</th>
-        else {
-            if (showAllPlans)
-                return <th key={key} id={key.toString()} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}>{plan.resolution}</th>
-        }
-    })
-    const tableBodyFourthRow = plans.map((plan: IPlan, key) => {
-        if (key !== extraPlanId)
-            return <td key={key} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}><FontAwesomeIcon icon={faCheck} /></td>
-        else {
-            if (showAllPlans)
-                return <td key={key} className={selectedPlan._id === plan._id ? styles.selected : ''} onClick={() => selectPlan(plan)}><FontAwesomeIcon icon={faCheck} /></td>
-        }
-    })
+    }
+
+    const plansTableHeader = plans.map((plan: IPlan, key) => extraColumnHandler(key, selectedPlan._id, plan, false, 'name'))
+
+    const tableBodyFirstRow = plans.map((plan: IPlan, key) => extraColumnHandler(key, selectedPlan._id, plan, true, 'price'))
+    const tableBodySecondRow = plans.map((plan: IPlan, key) => extraColumnHandler(key, selectedPlan._id, plan, true, 'quality'))
+    const tableBodyThirdRow = plans.map((plan: IPlan, key) => extraColumnHandler(key, selectedPlan._id, plan, true, 'resolution'))
+    const tableBodyFourthRow = plans.map((plan: IPlan, key) => extraColumnHandler(key, selectedPlan._id, plan, true))
     const tableBodyFifthRow = plans.map((plan: IPlan, key) => {
         if (key !== extraPlanId) {
             if (key === 1)

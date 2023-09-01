@@ -14,13 +14,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faCreditCard, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import ChoosenPackage from '@/components/ChoosenPackage/ChoosenPackage';
 import { checkValidity } from '@/helpers/validationFunctions';
-
-import styles from '../../../styles/SignUp.module.scss'
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import { useSelector } from 'react-redux';
-import { priceSelector } from '@/store/typePlan';
+import { planSelector, priceSelector } from '@/store/typePlan';
+import { useRouter } from 'next/router';
+import { initialSelectedPlan } from '../planform';
+
+import styles from '../../../styles/SignUp.module.scss'
 
 const CreditOption: FC = () => {
+    const router = useRouter()
+    const plan = useSelector(planSelector)
+    const newAccountToAdd = sessionStorage.getItem('newMembership')
     const price = useSelector(priceSelector)
 
     const [cardNumber, setCardNumber] = useState('')
@@ -94,7 +99,11 @@ const CreditOption: FC = () => {
         checkValidity({ name: 'First name', value: firstName, validCondition: firstName.length >= 2, setMessage: firstNameMessageHandler })
         checkValidity({ name: 'Last name', value: lastName, validCondition: lastName.length >= 2, setMessage: lastNameMessageHandler })
     }
-
+    if (newAccountToAdd)
+        router.push('/signup')
+    else if (plan === initialSelectedPlan)
+        router.push('/signup/planform')
+    else {
     return (
         <SignUpLayout>
             <SignUpSection width='medium' showSection={true}>
@@ -146,6 +155,7 @@ const CreditOption: FC = () => {
             </SignUpSection>
         </SignUpLayout>
     );
+    }
 };
 
 export default CreditOption;
