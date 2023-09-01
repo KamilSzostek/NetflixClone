@@ -1,4 +1,6 @@
 import { FC, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import Link from 'next/link';
 import Footer from '@/components/Footer/Footer';
 import CheckList from '@/components/CheckList/CheckList';
@@ -11,12 +13,40 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 
 import styles from '../../../components/ui/SignUpLayout/SignUpLayout.module.scss'
+import { selectPlan } from '@/store/typePlan';
+
+export interface IPlan {
+    _id: string;
+    name: string
+    price: string
+    quality: string
+    resolution: string
+}
+
+const planArr = ['Watch all you want.', 'Recommendations just for you.', 'Change or cancel your plan anytime.']
+const linkArr = ['FAQ', 'Cancel Membership', 'Help Center', 'Netflix Shop', 'Terms of Use', 'Privacy', 'Cookie Preferences', 'Corporate Information', 'Impressum']
 
 const PlanForm: FC = () => {
-    const [selectedPlanId, setSelectedPlanId] = useState('1')
+    const dispatch = useDispatch()
+    const router = useRouter()
+    const initialSelectedPlan = {
+        _id: '',
+        name: '',
+        price: '',
+        quality: '',
+        resolution: ''
+    }
+    const [selectedPlan, setSelectedPlan] = useState(initialSelectedPlan)
+    const selectPlanHandler = (plan: IPlan) => setSelectedPlan(plan)
 
-    const planArr = ['Watch all you want.', 'Recommendations just for you.', 'Change or cancel your plan anytime.']
-    const linkArr = ['FAQ', 'Cancel Membership', 'Help Center', 'Netflix Shop', 'Terms of Use', 'Privacy', 'Cookie Preferences', 'Corporate Information', 'Impressum']
+    const clickHandler = () => {
+        if (selectedPlan === initialSelectedPlan)
+            alert('Select any plan')
+        else {
+            dispatch(selectPlan(selectedPlan))
+            router.push('/signup/paymentPicker')
+        }
+    }
 
     return (
         <SignUpLayout children2={<Footer linkList={linkArr} lightBg />}>
@@ -25,7 +55,7 @@ const PlanForm: FC = () => {
                     <StepCounter currentStep={2} totalStepInteger={3} />
                     <h2>Choose the plan that's right for you</h2>
                     <CheckList content={planArr} />
-                    <PlanTable selectedPlanId={selectedPlanId} setSelectedPlanId={setSelectedPlanId} />
+                    <PlanTable selectedPlan={selectedPlan} selectPlan={selectPlanHandler} />
                     <div className={styles.adplan}><FontAwesomeIcon className={styles.icon} icon={faLock} /><span>An ad-supported plan includes a few differences. <Link href='https://help.netflix.com/en'>Learn how it works.</Link></span></div>
                     <article>
                         <p>If you select an ad-supported plan, you will be required to provide your date of birth for ads personalization and other purposes consistent with the <Link href='https://help.netflix.com/legal/privacy'>Netflix Privacy Statement.</Link></p>
@@ -34,7 +64,7 @@ const PlanForm: FC = () => {
                         <p>Only people who live with you may use your account. Add 1 extra member with Standard or up to 2 with Premium. <Link href='https://help.netflix.com/en/node/24926/'>Learn more.</Link> Watch on 4 different devices at the same time with Premium, 2 with Standard or Standard with ads, and 1 with Basic.
                         </p>
                     </article>
-                    <BaseButton text='Next' linkPath='/signup/paymentPicker' />
+                    <BaseButton text='Next' onClick={clickHandler} />
                 </section>
             </SignUpSection>
         </SignUpLayout>

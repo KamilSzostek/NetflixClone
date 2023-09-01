@@ -1,5 +1,7 @@
 import { FC } from 'react';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
+import { priceSelector } from '@/store/typePlan';
 
 import styles from './ChoosenPackage.module.scss'
 
@@ -8,11 +10,12 @@ interface IChoosenPackageProps {
 }
 
 const ChoosenPackage: FC<IChoosenPackageProps> = ({ children }) => {
+    const price = useSelector(priceSelector)
     return (
         <section className={styles.package}>
             <div>
                 <div>
-                    <span>€17,99/month</span>
+                    <span>€{price}/month</span>
                     <span>Premium</span>
                 </div>
                 <Link href='/signup/planform'>Change</Link>

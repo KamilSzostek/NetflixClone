@@ -15,8 +15,11 @@ import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 
 import styles from '../../../styles/SignUp.module.scss';
 import extraStyles from '../../../styles/DCBOption.module.scss'
+import { useSelector } from 'react-redux';
+import { priceSelector } from '@/store/typePlan';
 
 const DCBOption: FC = () => {
+    const price = useSelector(priceSelector)
     const [phoneNumber, setPhoneNumber] = useState('')
     const [validMessage, setValidMessage] = useState('')
     const validMessageHandler = (message: string) => setValidMessage(message)
@@ -60,7 +63,7 @@ const DCBOption: FC = () => {
                                 <Link href=''> Terms of Use</Link> and that you are over 18 and acknowledge the
                                 <Link href=''> Privacy Statement</Link>.
                                 Netflix will automatically continue your membership and charge the membership fee
-                                (currently €17,99/month) to your payment method until you cancel.
+                                (currently €{price}/month) to your payment method until you cancel.
                                 You may cancel at any time to avoid future charges.
                             </p>
                         </ChoosenPackage>

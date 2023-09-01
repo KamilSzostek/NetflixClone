@@ -17,8 +17,12 @@ import { checkValidity } from '@/helpers/validationFunctions';
 
 import styles from '../../../styles/SignUp.module.scss'
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
+import { useSelector } from 'react-redux';
+import { priceSelector } from '@/store/typePlan';
 
 const CreditOption: FC = () => {
+    const price = useSelector(priceSelector)
+
     const [cardNumber, setCardNumber] = useState('')
     const [cardNumberMessage, setCardNumberMessage] = useState('')
     const [expirationDate, setExpirationDate] = useState('')
@@ -132,7 +136,7 @@ const CreditOption: FC = () => {
                                 <Link href=''> Terms of Use</Link> and that you are over 18 and acknowledge the
                                 <Link href=''> Privacy Statement</Link>.
                                 Netflix will automatically continue your membership and charge the membership fee
-                                (currently €17,99/month) to your payment method until you cancel.
+                                (currently €{price}/month) to your payment method until you cancel.
                                 You may cancel at any time to avoid future charges.
                             </p>
                         </ChoosenPackage>
