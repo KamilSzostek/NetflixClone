@@ -13,12 +13,11 @@ import CustomInput from '@/components/ui/CustomInput/CustomInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faCreditCard, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import ChoosenPackage from '@/components/ChoosenPackage/ChoosenPackage';
-import { checkFormIsValid, checkValidity } from '@/helpers/validationFunctions';
+import { checkValidity } from '@/helpers/validationFunctions';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import { useSelector } from 'react-redux';
 import { planSelector, priceSelector } from '@/store/typePlan';
 import { useRouter } from 'next/router';
-import { initialSelectedPlan } from '../planform';
 
 import styles from '../../../styles/SignUp.module.scss'
 
@@ -48,6 +47,7 @@ const CreditOption: FC = () => {
             router.push('/signup/planform')
     }, [])
 
+    const inputsArr = [cardNumber, expirationDate, firstName, lastName, CVV]
     const errorMessagesArr = [cardNumberMessage, expirationDateMessage, CVVMessage, firstNameMessage, lastNameMessage]
 
     //Function control card number field, which can contain only 16 digits separeted by space after every four digits
@@ -101,25 +101,34 @@ const CreditOption: FC = () => {
     //Function prevent send of form and check which fields are valid, if field is invalid then function will set error-message
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const expirationDateCondition = (parseInt(expirationDate.substring(0, 3)) > 12 || parseInt(expirationDate.substring(3, 5)) < new Date().getFullYear() - 2001)
-        checkValidity({ name: 'Card number', value: cardNumber, validCondition: cardNumber.length < 17, setMessage: cardNumberMessageHandler })
-        checkValidity({ name: 'Expiration date', value: expirationDate, validCondition: expirationDateCondition, setMessage: expirationDateMessageHandler })
-        checkValidity({ name: 'CVV', value: CVV, validCondition: CVV.length < 3, setMessage: CVVMessageHandler })
-        checkValidity({ name: 'First name', value: firstName, validCondition: firstName.length >= 2, setMessage: firstNameMessageHandler })
-        checkValidity({ name: 'Last name', value: lastName, validCondition: lastName.length >= 2, setMessage: lastNameMessageHandler })
+        const validationResultsArr: boolean[] = []
+        const expirationDateCondition = (parseInt(expirationDate.substring(0, 3)) <= 12 || parseInt(expirationDate.substring(3, 5)) > new Date().getFullYear() - 2001)
+        validationResultsArr.push(checkValidity({ name: 'Card number', value: cardNumber, validCondition: cardNumber.length === 19, setMessage: cardNumberMessageHandler }))
+        validationResultsArr.push(checkValidity({ name: 'Expiration date', value: expirationDate, validCondition: expirationDateCondition, setMessage: expirationDateMessageHandler }))
+        validationResultsArr.push(checkValidity({ name: 'CVV', value: CVV, validCondition: CVV.length === 3, setMessage: CVVMessageHandler }))
+        validationResultsArr.push(checkValidity({ name: 'First name', value: firstName, validCondition: firstName.length >= 2, setMessage: firstNameMessageHandler }))
+        validationResultsArr.push(checkValidity({ name: 'Last name', value: lastName, validCondition: lastName.length >= 2, setMessage: lastNameMessageHandler }))
 
-        if (checkFormIsValid(errorMessagesArr)) {
+        if (validationResultsArr.every(result => result)) {
             const newUser = {
-                email: sessionStorage.getItem('newMembership'),
-                plan
+                email: sessionStorage.getItem('newMember'),
+                plan,
+                creditCard: {
+                    firstName,
+                    lastName,
+                    cardNumber: cardNumber,
+                    expirationDate,
+                    CVV: +CVV
+                }
             }
             fetch('/api/users', {
-                method: 'PUT',
                 headers: {
-                    "ContentType": "application/json"
+                    'Content-Type': 'application/json'
                 },
+                method: 'PUT',
                 body: JSON.stringify(newUser)
-            })
+            }).then(res => res.json()).then(data => console.log(data)).catch(err => console.error(err))
+            sessionStorage.removeItem('newMember')
             router.push('/browse')
         }
     }

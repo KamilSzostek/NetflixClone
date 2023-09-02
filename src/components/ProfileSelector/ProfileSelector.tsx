@@ -10,14 +10,16 @@ import styles from './ProfileSelector.module.scss'
 
 interface IProfileSelectorProps {
     title: string,
-    isDarker?: boolean,
-    buttonText: string,
+    buttonText: string
     linkPath: string
+    openEditkHandler?: () => void
+    closeEditkHandler?: () => void
+    isDarker?: boolean
 }
 
 const profiles = [{name: 'Kamil', image: Default}, {name: 'Dzieci', image: Kids}, {name: 'Dodaj profil', image: faCirclePlus}];
 
-const ProfileSelector: FC<IProfileSelectorProps> = ({title, isDarker, buttonText, linkPath}) => {
+const ProfileSelector: FC<IProfileSelectorProps> = ({title, isDarker, buttonText, linkPath, openEditkHandler, closeEditkHandler}) => {
     const router = useRouter()
 
     const profileSelect = profiles.map((profile, key) => (router.pathname === '/ManageProfiles' && key < profiles.length-1
@@ -32,7 +34,7 @@ const ProfileSelector: FC<IProfileSelectorProps> = ({title, isDarker, buttonText
           <div>
               {profileSelect}
           </div>
-          <Link href={linkPath}>{buttonText}</Link>
+          {closeEditkHandler ? <button onClick={openEditkHandler}>{buttonText}</button> : <Link href={linkPath}>{buttonText}</Link>}
       </section>
     );
 };

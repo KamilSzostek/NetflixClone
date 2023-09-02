@@ -12,6 +12,7 @@ import StepCounter from '@/components/StepCounter/StepCounter';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import { emailValidation, passwordValidation } from '@/helpers/validationFunctions';
 import { ObjectId } from 'mongodb';
+import { initialSelectedPlan } from './planform';
 
 type User = {
     _id: ObjectId,
@@ -84,10 +85,20 @@ const SignUp: FC = () => {
 
     const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        const plan = initialSelectedPlan
         if (emailValidation(email) && passwordValidation(password)) {//check email and password have correct format
             const newUser = JSON.stringify({
                 email,
-                password
+                password,
+                plan,
+                phoneNumber: '',
+                creditCard: {
+                    firstName: '',
+                    lastName: '',
+                    cardNumber: 0,
+                    CVV: 0,
+                    expirationDate: ''
+                }
             })
             setPasswordValidMessage('')
             try {

@@ -5,7 +5,7 @@ import EditProfileForm from '@/components/EditProfileForm/EditProfileForm';
 import styles from '../../styles/ManageProfiles.module.scss'
 
 const ManageProfiles: FC = () => {
-    const [showEditForm, setShowEditForm] = useState(true)
+    const [showEditForm, setShowEditForm] = useState(false)
     const openEditForm = () => setShowEditForm(true)
     const closeEditForm = () => setShowEditForm(false)
     return (

@@ -53,20 +53,40 @@ export default async function handler(
     }
   } else if (method === "PUT") {
     try {
-      if (body.plan) {
+      const {email, plan, password, phoneNumber, creditCard} = body
+      if (plan) {
         await db!
           .collection("NetflixUsers")
           .findOneAndUpdate(
-            { email: body.email },
-            { $set: { plan: body.plan } }
+            { email: email },
+            { $set: { plan: plan } }
           );
         res.status(201).json({ message: "User updated", user: req.body });
-      } else {
+      }
+      if (phoneNumber) {
         await db!
           .collection("NetflixUsers")
           .findOneAndUpdate(
-            { email: body.email },
-            { $set: { password: body.password } }
+            { email: email },
+            { $set: { phoneNumber: phoneNumber } }
+          );
+        res.status(201).json({ message: "User updated", user: req.body });
+      }
+      if (password) {
+        await db!
+          .collection("NetflixUsers")
+          .findOneAndUpdate(
+            { email: email },
+            { $set: { password: password } }
+          );
+        res.status(201).json({ message: "User updated",user: req.body });
+      }
+      if(creditCard){
+        await db!
+          .collection("NetflixUsers")
+          .findOneAndUpdate(
+            { email: email },
+            { $set: { creditCard: creditCard } }
           );
         res.status(201).json({ message: "User updated",user: req.body });
       }

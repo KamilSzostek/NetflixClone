@@ -5,7 +5,6 @@ import Footer from '@/components/Footer/Footer'
 import { footerLinkArr } from '@/helpers/footerLinkLists'
 
 export default function Home() {
-  
 
   return (
     <>

@@ -23,11 +23,12 @@ import extraStyles from '../../../styles/DCBOption.module.scss'
 const DCBOption: FC = () => {
     const router = useRouter()
     const plan = useSelector(planSelector)
-    let newAccountToAdd = ''
     const price = useSelector(priceSelector)
     const [phoneNumber, setPhoneNumber] = useState('')
     const [validMessage, setValidMessage] = useState('')
     const validMessageHandler = (message: string) => setValidMessage(message)
+
+    let newAccountToAdd = ''
 
     useLayoutEffect(() => {
         newAccountToAdd = sessionStorage.getItem('newMember')!
@@ -47,19 +48,22 @@ const DCBOption: FC = () => {
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        checkValidity({ name: 'Mobile number', value: phoneNumber, validCondition: phoneNumber.length < 7, setMessage: validMessageHandler })
-        if (validMessage === '') {
+        const smallestLengthPhoneNumber = 7
+        
+        if (checkValidity({ name: 'Mobile number', value: phoneNumber, validCondition: phoneNumber.length < smallestLengthPhoneNumber, setMessage: validMessageHandler })) {
             const newUser = {
-                email: sessionStorage.getItem('newMembership'),
-                plan
+                email: sessionStorage.getItem('newMember'),
+                plan,
+                phoneNumber
             }
             fetch('/api/users', {
-                method: 'PUT',
                 headers: {
-                    "ContentType": "application/json"
+                    'Content-Type': 'application/json'
                 },
+                method: 'PUT',
                 body: JSON.stringify(newUser)
-            })
+            }).then(res => res.json()).then(data => console.log(data)).catch(err => console.error(err))
+            sessionStorage.removeItem('newMember')
             router.push('/browse')
         }
     }

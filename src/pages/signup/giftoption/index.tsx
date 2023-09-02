@@ -13,8 +13,6 @@ import { planSelector } from '@/store/typePlan';
 import { useRouter } from 'next/router';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 
-import styles from '../../../styles/GiftOptions.module.scss'
-
 const GiftOption: FC = () => {
     const router = useRouter()
     const plan = useSelector(planSelector)
@@ -38,7 +36,21 @@ const GiftOption: FC = () => {
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        checkValidity({ name: 'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length < 7, setMessage: validMessageHandler })
+        if(checkValidity({ name: 'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length < 7, setMessage: validMessageHandler })){
+            const newUser = {
+                email: sessionStorage.getItem('newMember'),
+                plan
+            }
+            fetch('/api/users', {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'PUT',
+                body: JSON.stringify(newUser)
+            }).then(res => res.json()).then(data => console.log(data)).catch(err => console.error(err))
+            sessionStorage.removeItem('newMember')
+            router.push('/browse')
+        }
     }
 
     if (plan.price !== '')
