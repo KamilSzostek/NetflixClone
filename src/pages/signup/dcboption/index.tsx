@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useLayoutEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
@@ -15,7 +15,6 @@ import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import { useSelector } from 'react-redux';
 import { planSelector, priceSelector } from '@/store/typePlan';
 import { useRouter } from 'next/router';
-import { initialSelectedPlan } from '../planform';
 
 import styles from '../../../styles/SignUp.module.scss';
 import extraStyles from '../../../styles/DCBOption.module.scss'
@@ -24,11 +23,20 @@ import extraStyles from '../../../styles/DCBOption.module.scss'
 const DCBOption: FC = () => {
     const router = useRouter()
     const plan = useSelector(planSelector)
-    const newAccountToAdd = sessionStorage.getItem('newMembership')
+    let newAccountToAdd = ''
     const price = useSelector(priceSelector)
     const [phoneNumber, setPhoneNumber] = useState('')
     const [validMessage, setValidMessage] = useState('')
     const validMessageHandler = (message: string) => setValidMessage(message)
+
+    useLayoutEffect(() => {
+        newAccountToAdd = sessionStorage.getItem('newMember')!
+        if (newAccountToAdd === undefined)
+            router.push('/signup')
+        else if (plan.price === '')
+            router.push('/signup/planform')
+    })
+
 
     const phoneNumberHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
@@ -40,14 +48,23 @@ const DCBOption: FC = () => {
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         checkValidity({ name: 'Mobile number', value: phoneNumber, validCondition: phoneNumber.length < 7, setMessage: validMessageHandler })
-
+        if (validMessage === '') {
+            const newUser = {
+                email: sessionStorage.getItem('newMembership'),
+                plan
+            }
+            fetch('/api/users', {
+                method: 'PUT',
+                headers: {
+                    "ContentType": "application/json"
+                },
+                body: JSON.stringify(newUser)
+            })
+            router.push('/browse')
+        }
     }
 
-    if (newAccountToAdd)
-        router.push('/signup')
-    else if (plan === initialSelectedPlan)
-        router.push('/signup/planform')
-    else {
+    if (plan.price !== '')
         return (
             <SignUpLayout>
                 <SignUpSection width='medium' showSection={true} isTextLeft>
@@ -86,7 +103,6 @@ const DCBOption: FC = () => {
                 </SignUpSection>
             </SignUpLayout>
         );
-    }
 };
 
 export default DCBOption;

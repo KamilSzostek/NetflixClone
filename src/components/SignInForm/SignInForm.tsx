@@ -53,38 +53,39 @@ const SignInForm: FC = () => {
         }
     }
 
-    const reCaptchaChangeHandler = async (captchaCode: string | null) => {
-        if (!captchaCode) {
-            return;
-        }
-        try {
-            const response = await fetch("/api/signin", {
-                method: "POST",
-                body: JSON.stringify({ email, password, captcha: captchaCode }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            if (response.ok) {
-                router.push('/browse')
-            } else {
+    // const reCaptchaChangeHandler = async (captchaCode: string | null) => {
+    //     if (!captchaCode) {
+    //         return;
+    //     }
+    //     try {
+    //         const response = await fetch("/api/signin", {
+    //             method: "POST",
+    //             body: JSON.stringify({ email, password, captcha: captchaCode }),
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //         });
+    //         if (response.ok) {
+    //             router.push('/browse')
+    //         } else {
 
-                const error = await response.json();
-                throw new Error(error.message)
-            }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            reCaptchaRef.current && reCaptchaRef.current.reset();
-            setEmail("");
-            setPassword("");
-        }
-    }
+    //             const error = await response.json();
+    //             throw new Error(error.message)
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     } finally {
+    //         reCaptchaRef.current && reCaptchaRef.current.reset();
+    //         setEmail("");
+    //         setPassword("");
+    //     }
+    // }
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const captcha = reCaptchaRef.current
-        captcha && captcha.execute();
+        // const captcha = reCaptchaRef.current
+        // captcha && captcha.execute();
+        // fetch('/api/users')
         if(loginValidMessage === '' && passwordValidMessage === '' && email === 'kamil@s.pl' && password === 'kamil')
         router.push('/browse')
     }

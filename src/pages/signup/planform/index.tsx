@@ -37,13 +37,13 @@ export const initialSelectedPlan = {
 
 const PlanForm: FC = () => {
     const dispatch = useDispatch()
-    const newAccountToAdd = sessionStorage.getItem('newMembership')
     const router = useRouter()
     const [selectedPlan, setSelectedPlan] = useState(initialSelectedPlan)
     const selectPlanHandler = (plan: IPlan) => setSelectedPlan(plan)
 
     const clickHandler = () => {
-        if (newAccountToAdd) {
+        const newAccountToAdd = sessionStorage?.getItem('newMember')
+        if (newAccountToAdd !== undefined) {
             if (selectedPlan === initialSelectedPlan)
                 alert('Select any plan')
             else {

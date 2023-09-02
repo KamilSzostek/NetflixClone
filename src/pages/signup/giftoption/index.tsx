@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useLayoutEffect, useState } from 'react';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
 import StepCounter from '@/components/StepCounter/StepCounter';
 import FieldWithValidation from '@/components/FieldWithValidation/FieldWithValidation';
@@ -9,19 +9,26 @@ import { footerLinkArr2 } from '@/helpers/footerLinkLists';
 import Footer from '@/components/Footer/Footer';
 import { checkValidity } from '@/helpers/validationFunctions';
 import { useSelector } from 'react-redux';
-import { planSelector, priceSelector } from '@/store/typePlan';
+import { planSelector } from '@/store/typePlan';
 import { useRouter } from 'next/router';
-import { initialSelectedPlan } from '../planform';
-
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
+
+import styles from '../../../styles/GiftOptions.module.scss'
 
 const GiftOption: FC = () => {
     const router = useRouter()
     const plan = useSelector(planSelector)
-    const newAccountToAdd = sessionStorage.getItem('newMembership')
     const [giftCode, setGiftCode] = useState('')
     const [validMessage, setValidMessage] = useState('')
     const validMessageHandler = (message: string) => setValidMessage(message)
+
+    useLayoutEffect(() => {
+        const newAccountToAdd = sessionStorage.getItem('newMember')
+        if (newAccountToAdd === undefined)
+            router.push('/signup')
+        if (plan.price === '')
+            router.push('/signup/planform')
+    }, [])
 
     const giftCodeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
@@ -34,13 +41,9 @@ const GiftOption: FC = () => {
         checkValidity({ name: 'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length < 7, setMessage: validMessageHandler })
     }
 
-    if (newAccountToAdd)
-        router.push('/signup')
-    else if (plan === initialSelectedPlan)
-        router.push('/signup/planform')
-    else {
+    if (plan.price !== '')
         return (
-            <SignUpLayout>
+            <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
                 <SignUpSection width='medium' showSection={true} isTextLeft>
                     <>
                         <StepCounter currentStep={3} totalStepInteger={3} />
@@ -54,10 +57,8 @@ const GiftOption: FC = () => {
                         </form>
                     </>
                 </SignUpSection>
-                <Footer linkList={footerLinkArr2} lightBg />
             </SignUpLayout>
         );
-    };
 }
 
 export default GiftOption;

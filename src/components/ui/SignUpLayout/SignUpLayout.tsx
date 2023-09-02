@@ -4,7 +4,7 @@ import NavBar from '@/components/NavBar/NavBar';
 import styles from './SignUpLayout.module.scss'
 
 interface ISignUpLayoutProps {
-    children: ReactNode,
+    children?: ReactNode,
     children2?: ReactNode
 }
 

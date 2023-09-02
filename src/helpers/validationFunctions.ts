@@ -29,3 +29,11 @@ export function checkValidity(
       ? elements.setMessage(`Please, enter valid ${elements.name.toLowerCase()}`)
       : elements.setMessage(""));
   }
+
+export function checkFormIsValid(errorMessagesArr: string[]){
+    for (const message of errorMessagesArr) {
+        if(message !== '')
+            return false
+    }
+    return true
+}

@@ -47,8 +47,8 @@
 
         label {
             display: flex;
-            justify-content: start;
-            align-items: start;
+            justify-content: flex-start;
+            align-items: flex-start;
             gap: 25px;
             margin-block: 2em;
             font-size: 1.5rem;
@@ -94,8 +94,8 @@
 
 
 .left {
-    align-items: start;
-    justify-content: start;
+    align-items: flex-start;
+    justify-content: flex-start;
     text-align: left;
 
     p {

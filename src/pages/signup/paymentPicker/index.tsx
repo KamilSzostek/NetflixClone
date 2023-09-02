@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useLayoutEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -22,12 +22,15 @@ import divStyles from '../../../styles/PaymentPicker.module.scss'
 const PaymentPicker: FC = () => {
     const router = useRouter()
     const plan = useSelector(planSelector)
-    const newAccountToAdd = sessionStorage.getItem('newMembership')
-    if (newAccountToAdd)
-        router.push('/signup')
-    else if (plan === initialSelectedPlan)
-        router.push('/signup/planform')
-    else {
+
+    useLayoutEffect(() => {
+        const newAccountToAdd = sessionStorage.getItem('newMember')
+        if (newAccountToAdd === undefined)
+            router.push('/signup')
+        else if (plan.price === '')
+            router.push('/signup/planform')
+    })
+    if (plan.price !== '')
         return (
             <SignUpLayout>
                 <SignUpSection width='medium' showSection={true}>
@@ -60,7 +63,6 @@ const PaymentPicker: FC = () => {
                 </SignUpSection>
             </SignUpLayout>
         );
-    }
 };
 
 export default PaymentPicker;
