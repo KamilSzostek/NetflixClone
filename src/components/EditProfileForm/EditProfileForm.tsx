@@ -7,10 +7,11 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import styles from './EditProfile.module.scss'
 
 interface IEditProfileFormProps {
-    isKidsProfile?: boolean
+    isKidsProfile?: boolean,
+    closeEditHandler: () => void
 }
 
-const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile }) => {
+const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, closeEditHandler }) => {
     const nicknameMaxLength = 16
 
     const [name, setName] = useState('')
@@ -82,7 +83,7 @@ const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile }) => {
             </div>
             <div>
                 <button>Save</button>
-                <button>Cancel</button>
+                <button onClick={closeEditHandler}>Cancel</button>
             </div>
         </form>
     );

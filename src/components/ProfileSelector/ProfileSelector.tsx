@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import ProfileIcone from '../ProfileIcone/ProfileIcone';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
@@ -7,35 +7,72 @@ import Kids from '../../../public/assets/profiles/kids.png'
 import Link from 'next/link';
 
 import styles from './ProfileSelector.module.scss'
+import { StaticImageData } from 'next/image';
+import { ILanguage } from '@/pages/signup/configureAccount/profiles';
 
+export interface IProfile {
+    name: string
+    image: StaticImageData
+    nickname: string
+    preferedLanguage: ILanguage[]
+    ageGroup: string
+    autoNextEpisode: boolean
+    autoPreview: boolean
+}
+export interface IUser {
+    email: string,
+    password: string,
+    plan: {
+        name: string,
+        quality: string,
+        price: string,
+        resolution: string
+    },
+    phoneNumber: string,
+    creditCard: {
+        firstName: string,
+        lastName: string,
+        cardNumber: string,
+        CVV: string,
+        expirationDate: string
+    },
+    profiles: IProfile[],
+    isMembershipPaid: boolean
+}
 interface IProfileSelectorProps {
     title: string,
     buttonText: string
     linkPath: string
-    openEditkHandler?: () => void
-    closeEditkHandler?: () => void
+    openEditHandler?: () => void
     isDarker?: boolean
 }
 
-const profiles = [{name: 'Kamil', image: Default}, {name: 'Dzieci', image: Kids}, {name: 'Dodaj profil', image: faCirclePlus}];
-
-const ProfileSelector: FC<IProfileSelectorProps> = ({title, isDarker, buttonText, linkPath, openEditkHandler, closeEditkHandler}) => {
+const ProfileSelector: FC<IProfileSelectorProps> = ({ title, isDarker, buttonText, linkPath, openEditHandler }) => {
     const router = useRouter()
-
-    const profileSelect = profiles.map((profile, key) => (router.pathname === '/ManageProfiles' && key < profiles.length-1
-    ? <ProfileIcone key={key} name={profile.name} image={profile.image} isEditMode/>
-    : <ProfileIcone key={key} name={profile.name} image={profile.image} />))
+    const [profiles, setProfiles] = useState<IProfile[]>([])
     
+    useEffect(() => {
+        fetch('/api/users').then(res => res.json()).then(data => {
+            const user = data.find((user: IUser) => user.email === 'kam1@kam')
+            setProfiles(user.profiles)
+        }).catch(err => console.log(err))
+    })
+
+    const profileSelect = profiles.map((profile, key) => (router.pathname === '/ManageProfiles'
+        ? <ProfileIcone key={key} name={profile.name} image={profile.image} isEditMode />
+        : <ProfileIcone key={key} name={profile.name} image={profile.image} />))
+
     const sectionStyle = isDarker ? `${styles.darker} ${styles.selector}` : styles.selector
 
     return (
-      <section className={sectionStyle}>
-          <h1>{title}</h1>
-          <div>
-              {profileSelect}
-          </div>
-          {closeEditkHandler ? <button onClick={openEditkHandler}>{buttonText}</button> : <Link href={linkPath}>{buttonText}</Link>}
-      </section>
+        <section className={sectionStyle}>
+            <h1>{title}</h1>
+            <div onClick={openEditHandler}>
+                {profileSelect}
+                <ProfileIcone name='Dodaj profil' image={faCirclePlus} />
+            </div>
+            <Link href={linkPath}>{buttonText}</Link>
+        </section>
     );
 };
 

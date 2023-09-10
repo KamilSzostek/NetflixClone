@@ -27,10 +27,10 @@ const PaymentPicker: FC = () => {
         const newAccountToAdd = sessionStorage.getItem('newMember')
         if (newAccountToAdd === undefined)
             router.push('/signup')
-        else if (plan.price === '')
+        else if (plan._id === '')
             router.push('/signup/planform')
     })
-    if (plan.price !== '')
+    if (plan._id !== '')
         return (
             <SignUpLayout>
                 <SignUpSection width='medium' showSection={true}>

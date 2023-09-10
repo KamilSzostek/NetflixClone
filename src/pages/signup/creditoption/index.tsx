@@ -119,7 +119,8 @@ const CreditOption: FC = () => {
                     cardNumber: cardNumber,
                     expirationDate,
                     CVV: +CVV
-                }
+                },
+                isMembershipPaid: true
             }
             fetch('/api/users', {
                 headers: {
@@ -127,9 +128,10 @@ const CreditOption: FC = () => {
                 },
                 method: 'PUT',
                 body: JSON.stringify(newUser)
-            }).then(res => res.json()).then(data => console.log(data)).catch(err => console.error(err))
-            sessionStorage.removeItem('newMember')
-            router.push('/browse')
+            }).then(res => res.json()).then(data => {
+                data.user.isMembershipPaid ? router.push('/signup/configureAccount') : alert('Payment not done.')
+            }).catch(err => console.error(err))
+            
         }
     }
     if (plan.price !== '') {

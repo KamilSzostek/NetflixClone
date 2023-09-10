@@ -36,10 +36,11 @@ const GiftOption: FC = () => {
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if(checkValidity({ name: 'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length < 7, setMessage: validMessageHandler })){
+        if(checkValidity({ name: 'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length > 7, setMessage: validMessageHandler })){
             const newUser = {
                 email: sessionStorage.getItem('newMember'),
-                plan
+                plan,
+                isMembershipPaid: true
             }
             fetch('/api/users', {
                 headers: {
@@ -47,16 +48,17 @@ const GiftOption: FC = () => {
                 },
                 method: 'PUT',
                 body: JSON.stringify(newUser)
-            }).then(res => res.json()).then(data => console.log(data)).catch(err => console.error(err))
-            sessionStorage.removeItem('newMember')
-            router.push('/browse')
+            }).then(res => res.json()).then(data => {
+                data.user.isMembershipPaid ? router.push('/signup/configureAccount') : alert('Payment not done.')
+            }).catch(err => console.error(err))
+            router.push('/signup/configureAccount')
         }
     }
 
     if (plan.price !== '')
         return (
             <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
-                <SignUpSection width='medium' showSection={true} isTextLeft>
+                <SignUpSection width='medium' showSection={true} isTextLeftAllign>
                     <>
                         <StepCounter currentStep={3} totalStepInteger={3} />
                         <h2>Enter your gift code</h2>

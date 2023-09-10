@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, RefObject } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Link from 'next/link';
@@ -10,13 +10,13 @@ interface IBaseButtonProps {
   isBig?: boolean,
   icon?: IconDefinition,
   linkPath?: string,
-  onClick?: ()=>void
+  onClick?: ()=>void,
 }
 
-const BaseButton: FC<IBaseButtonProps> = ({ text, isBig, icon, linkPath, onClick }) => {
+const BaseButton: FC<IBaseButtonProps> = ({ text, isBig, icon, linkPath, onClick, ref }) => {
   const style = isBig ? `${styles.bigbutton} ${styles.button}` : styles.button
 
-  return linkPath ? (<Link className={style} href={linkPath} onClick={onClick}>{text}</Link>) : (<button className={style} onClick={onClick}>
+  return linkPath ? (<Link className={style} href={linkPath} onClick={onClick}>{text}</Link>) : (<button className={style} ref={ref} onClick={onClick}>
     {text}
     {icon && <FontAwesomeIcon className={styles.icon} icon={icon} />}
   </button>)

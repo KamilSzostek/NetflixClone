@@ -1,4 +1,4 @@
-import { FC, useLayoutEffect, useState } from 'react';
+import { FC, useLayoutEffect, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
@@ -21,57 +21,74 @@ import extraStyles from '../../../styles/DCBOption.module.scss'
 
 
 const DCBOption: FC = () => {
+    let newAccountToAdd = ''
+    const smallestLengthPhoneNumber = 7
+
     const router = useRouter()
     const plan = useSelector(planSelector)
     const price = useSelector(priceSelector)
+
     const [phoneNumber, setPhoneNumber] = useState('')
     const [validMessage, setValidMessage] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+
     const validMessageHandler = (message: string) => setValidMessage(message)
 
-    let newAccountToAdd = ''
+    const buttonRef = useRef<HTMLButtonElement>(null)
 
     useLayoutEffect(() => {
         newAccountToAdd = sessionStorage.getItem('newMember')!
         if (newAccountToAdd === undefined)
             router.push('/signup')
-        else if (plan.price === '')
+        else if (plan._id === ''){
+            console.log('skok');
             router.push('/signup/planform')
+        }
     })
 
+    useEffect(() => {
+        const button = buttonRef.current
+        button && button.classList.toggle('loadingButton')
+    }, [isLoading])
 
     const phoneNumberHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
         const onlyDigitsReg = new RegExp('[0-9]');
         (onlyDigitsReg.test(value) || value === '') && setPhoneNumber(e.currentTarget.value)
-        checkValidity({ name: 'Mobile number', value, validCondition: value.length < 7, setMessage: validMessageHandler })
+        checkValidity({ name: 'Mobile number', value, validCondition: phoneNumber.length > smallestLengthPhoneNumber, setMessage: validMessageHandler })
     }
 
-    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const smallestLengthPhoneNumber = 7
         
-        if (checkValidity({ name: 'Mobile number', value: phoneNumber, validCondition: phoneNumber.length < smallestLengthPhoneNumber, setMessage: validMessageHandler })) {
+        if (checkValidity({ name: 'Mobile number', value: phoneNumber, validCondition: phoneNumber.length > smallestLengthPhoneNumber, setMessage: validMessageHandler })) {
             const newUser = {
                 email: sessionStorage.getItem('newMember'),
                 plan,
-                phoneNumber
+                phoneNumber,
+                isMembershipPaid: true
             }
-            fetch('/api/users', {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: 'PUT',
-                body: JSON.stringify(newUser)
-            }).then(res => res.json()).then(data => console.log(data)).catch(err => console.error(err))
-            sessionStorage.removeItem('newMember')
-            router.push('/browse')
+            try{
+                const res = await fetch('/api/users', {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'PUT',
+                    body: JSON.stringify(newUser)
+                })
+                const data = await res.json()
+                data.user?.isMembershipPaid ? router.push('/signup/configureAccount') : alert('Payment not done.')
+            }
+            catch(err){
+                console.error(err);
+            }
         }
     }
 
-    if (plan.price !== '')
+    if (plan._id !== '')
         return (
             <SignUpLayout>
-                <SignUpSection width='medium' showSection={true} isTextLeft>
+                <SignUpSection width='medium' showSection={true} isTextLeftAllign>
                     <>
                         <StepCounter currentStep={3} totalStepInteger={3} />
                         <h2>Set up billing through your mobile carrier</h2>
@@ -100,7 +117,7 @@ const DCBOption: FC = () => {
                                     You may cancel at any time to avoid future charges.
                                 </p>
                             </ChoosenPackage>
-                            <BaseButton text='Verify Phone Number' />
+                            <BaseButton text='Verify Phone Number'/>
                         </form>
                         <span className={extraStyles.info}>We'll text a code to verify your number.</span>
                     </>

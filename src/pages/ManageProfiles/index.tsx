@@ -10,8 +10,8 @@ const ManageProfiles: FC = () => {
     const closeEditForm = () => setShowEditForm(false)
     return (
         <main className={styles.main}>
-            {!showEditForm && <ProfileSelector title='Manage profiles' buttonText='Done' linkPath='/browse' isDarker />}
-            {showEditForm && <EditProfileForm />}
+            {!showEditForm && <ProfileSelector title='Manage profiles' buttonText='Done' linkPath='/browse' openEditHandler={openEditForm} isDarker />}
+            {showEditForm && <EditProfileForm closeEditHandler={closeEditForm}/>}
         </main>
     )
 };

@@ -53,15 +53,27 @@ export default async function handler(
     }
   } else if (method === "PUT") {
     try {
-      const {email, plan, password, phoneNumber, creditCard} = body
-      if (plan) {
+      const {
+        email,
+        plan,
+        password,
+        phoneNumber,
+        creditCard,
+        isMembershipPaid,
+        profiles,
+      } = body;
+      if (isMembershipPaid) {
         await db!
           .collection("NetflixUsers")
           .findOneAndUpdate(
             { email: email },
-            { $set: { plan: plan } }
+            { $set: { isMembershipPaid: isMembershipPaid } }
           );
-        res.status(201).json({ message: "User updated", user: req.body });
+      }
+      if (plan) {
+        await db!
+          .collection("NetflixUsers")
+          .findOneAndUpdate({ email: email }, { $set: { plan: plan } });
       }
       if (phoneNumber) {
         await db!
@@ -70,26 +82,26 @@ export default async function handler(
             { email: email },
             { $set: { phoneNumber: phoneNumber } }
           );
-        res.status(201).json({ message: "User updated", user: req.body });
       }
       if (password) {
         await db!
           .collection("NetflixUsers")
-          .findOneAndUpdate(
-            { email: email },
-            { $set: { password: password } }
-          );
-        res.status(201).json({ message: "User updated",user: req.body });
+          .findOneAndUpdate({ email: email }, { $set: { password: password } });
       }
-      if(creditCard){
+      if (creditCard) {
         await db!
           .collection("NetflixUsers")
           .findOneAndUpdate(
             { email: email },
             { $set: { creditCard: creditCard } }
           );
-        res.status(201).json({ message: "User updated",user: req.body });
       }
+      if (profiles) {
+        await db!
+          .collection("NetflixUsers")
+          .findOneAndUpdate({ email: email }, { $set: { profiles: profiles } });
+      }
+      res.status(201).json({ message: "User updated", user: req.body });
       client?.close;
     } catch (error) {
       return res.status(422).json({ message: "User data didn't updated" });

@@ -1,0 +1,55 @@
+@mixin checkmark{
+        &::before{
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30px;
+        height: 30px;
+        background-image: url('../../public/assets/Checkmark.png');
+        background-color: #fff;
+        background-position: center;
+        background-size: contain;
+        border-radius: 50%;
+        transform: translate(25%, -25%);
+    }
+}
+
+@mixin customcheckbox{
+    input[type="checkbox"] {
+        cursor: pointer;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        outline: 0;
+        background: lightgray;
+        border-radius: .25em;
+        height: 19px;
+        min-width: 19px;
+        width: 19px;
+        border: 1px solid white;
+        color: white;
+    }
+
+    input[type="checkbox"]:checked {
+        background: rgb(22, 211, 22);
+        color: white;
+    }
+
+    input[type="checkbox"]:after {
+        content: ' ';
+        position: relative;
+        left: 40%;
+        top: 20%;
+        width: 15%;
+        height: 40%;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(50deg);
+        display: none;
+    }
+
+    input[type="checkbox"]:checked:after {
+        display: block;
+    }
+}
