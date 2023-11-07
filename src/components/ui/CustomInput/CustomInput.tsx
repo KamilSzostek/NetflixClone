@@ -12,9 +12,10 @@ interface ICustomInputProps {
     inputType?: string,
     isLight?: boolean,
     children?: ReactElement
+    id?: string
 }
 
-const CustomInput: FC<ICustomInputProps> = ({ children, placeholder, inputRef, inputValue, changeHandler, inputType, inputBlur, keyDownHandler, isLight }) => {
+const CustomInput: FC<ICustomInputProps> = ({ id, children, placeholder, inputRef, inputValue, changeHandler, inputType, inputBlur, keyDownHandler, isLight }) => {
     const legendRef = useRef<HTMLLegendElement>(null)
     const inputInsideRef = useRef<HTMLInputElement>(null)
 
@@ -31,7 +32,7 @@ const CustomInput: FC<ICustomInputProps> = ({ children, placeholder, inputRef, i
     return (
         <fieldset className={fieldsetStyle}>
             <legend ref={legendRef} onClick={focusHandler}>{placeholder}</legend>
-            <input className={styles.input} ref={inputRef ?? inputInsideRef} value={inputValue} type={inputType ? inputType : 'text'} onChange={changeHandler} onFocus={focusHandler} onBlur={blurHandler} onKeyDown={keyDownHandler}/>
+            <input id={id} className={styles.input} ref={inputRef ?? inputInsideRef} value={inputValue} type={inputType ? inputType : 'text'} onChange={changeHandler} onFocus={focusHandler} onBlur={blurHandler} onKeyDown={keyDownHandler}/>
             {children}
         </fieldset>
     );

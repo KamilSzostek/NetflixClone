@@ -1,0 +1,51 @@
+.likes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    max-width: 150px;
+    overflow: hidden;
+    transition: width 1.5s !important;
+    svg{
+        height: 20px !important;
+    }
+    &:hover{
+        width: 200%;
+        border-radius: 2em;
+        svg{
+            color: rgba(255, 255, 255, 0.5) !important;
+            transform: scale(1) !important;
+            &:hover{
+                color: white !important;
+                transform: scale(1.1) !important;
+            }
+        }
+    }
+    .green{
+        color: #34C759;
+    }
+    .red{
+        color: #bc2c29;
+    }
+}
+.white{
+    background-color: #fff !important;
+    &:hover{
+        background-color: #ffffffaf !important;
+        .green{
+            color: #34C759 !important;
+        }
+        .red{
+            color: #bc2c29 !important;
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .likes{
+        gap: 15px;
+        svg{
+            height: 25px !important;
+        }
+    }
+}

@@ -5,9 +5,9 @@ import StepCounter from '@/components/StepCounter/StepCounter';
 import Footer from '@/components/Footer/Footer';
 import BaseButton from '@/components/ui/BaseButton/BaseButton';
 import { footerLinkArr2 } from '@/helpers/footerLinkLists';
+import { useConfigureAccountNavGuard } from '@/hooks/useConfigureAccountNavGuard';
 
 import styles from '../../../styles/configureAccount.module.scss'
-import { useConfigureAccountNavGuard } from '@/hooks/useConfigureAccountNavGuard';
 
 const ConfigureAccount: FC = () => {
     const [email, setEmail] = useState('')

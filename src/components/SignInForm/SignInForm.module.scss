@@ -8,7 +8,18 @@
         margin-bottom: 2rem;
         text-transform: capitalize;
     }
-
+    .error{
+        margin-block: .5em;
+        padding: .5em;
+        background-color: #E87C03;
+        border-radius: .5em;
+        color: #ffffffdf;
+        font-size: 1.5rem;
+        text-align: center;
+    }
+    .d-block{
+        display: block;
+    }
     fieldset {
         position: relative;
         width: 100%;

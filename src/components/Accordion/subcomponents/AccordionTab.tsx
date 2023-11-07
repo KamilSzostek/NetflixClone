@@ -15,9 +15,9 @@ const AccordionTab: FC<IAccordionTabProps> = ({ title, text }) => {
     const paragraphRef = useRef(null)
     return (
         <div>
-            <h2 onClick={() => setShowParagraph(!showParagraph)}>{title}
+            <h3 onClick={() => setShowParagraph(!showParagraph)}>{title}
                 {showParagraph ? <FontAwesomeIcon className={styles.icon} icon={faClose} /> : <FontAwesomeIcon className={styles.icon} icon={faPlus} />}
-            </h2>
+            </h3>
             <CSSTransition
                 in={showParagraph}
                 nodeRef={paragraphRef}

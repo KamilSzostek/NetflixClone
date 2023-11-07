@@ -1,0 +1,59 @@
+.deleteProfile{
+    margin-inline: 1em;
+    h1{
+        padding: 0;
+        font-size: clamp(3rem, 3rem + 2vw, 5rem);
+    }
+    div{
+        display: flex;
+        gap: 20px;
+        padding-block: 2em;
+        border-top: 1px solid rgba(255, 255, 255, 0.25);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+        figure{
+            img{
+                width: clamp(50px, 60px + 2vw, 100px);
+                height: clamp(50px, 60px + 2vw, 100px);
+            }
+            figcaption{
+                margin-top: .5em;
+                color: rgba(255, 255, 255, 0.4);
+                font-size: clamp(1.5rem, 1.7rem + 2vw, 2rem);
+                text-align: center;
+            }
+        }
+        p{
+            align-self: flex-end;
+            max-width: 300px;
+            margin-bottom: 2em;
+            color: #ffffffd7;
+            font-size: clamp(1.2rem, 1.3rem + 2vw, 1.5rem);
+        }
+    }
+    div:last-child{
+        border: none;
+        button{
+            padding: .5em 1em;
+            background-color: #b2abab;
+            border: 1px solid #b2abab;
+            color: black;
+            font-size: clamp(1.3rem, 1.5rem + 2vw, 1.7rem);
+            cursor: pointer;
+            transition: .3s;
+            &:hover{
+                background-color: red;
+                border-color: red;
+                color: #fff;
+            }
+        }
+        button:last-child{
+            background-color: #ffffff00;
+            color: #b2abab;
+            &:hover{
+                border-color: white;
+                color: white;
+            }
+        }
+    }
+    
+}

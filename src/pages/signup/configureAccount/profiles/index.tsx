@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useId, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
@@ -8,22 +8,20 @@ import BaseButton from '@/components/ui/BaseButton/BaseButton';
 import Footer from '@/components/Footer/Footer';
 import { footerLinkArr2 } from '@/helpers/footerLinkLists';
 import DefaultIcon from '../../../../../public/assets/profiles/default.png'
-import { IProfile } from '@/components/ProfileSelector/ProfileSelector';
+import { IProfile, ILanguage } from '@/helpers/interfaces';
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector';
+import { useConfigureAccountNavGuard } from '@/hooks/useConfigureAccountNavGuard';
+import { setCookie } from '@/helpers/cookies';
+import { ageGroups } from '@/helpers/ageGroup';
+import KidsIcon from '../../../../../public/assets/profiles/kids.png'
 
 import styles from '../../../../styles/configureAccount.module.scss'
 import stylesProfiles from '../../../../styles/ConfigureProfiles.module.scss'
-import { useConfigureAccountNavGuard } from '@/hooks/useConfigureAccountNavGuard';
 
-export interface ILanguage {
-    _id: string,
-    code: string,
-    name: string,
-    nativeName: string
-}
 
 const ConfigureProfiles: FC = () => {
     const currentYear = new Date().getFullYear()
+    const randomId = useId()
     const router = useRouter()
 
     const [showFirstStep, setShowFirstStep] = useState(true)
@@ -31,7 +29,7 @@ const ConfigureProfiles: FC = () => {
     const [showThirdStep, setShowThirdStep] = useState(false)
     const [selectedYear, setSelectedYear] = useState(2022)
     const [profileCounter, setProfileCounter] = useState(0)
-    const [profiles] = useState<IProfile[]>([])
+    const [profiles, setProfiles] = useState<IProfile[]>([])
     const [selectedLanguages, setSelectedLanguages] = useState<ILanguage[]>([])
 
     const profilesSectionRef = useRef<HTMLElement>(null)
@@ -43,26 +41,38 @@ const ConfigureProfiles: FC = () => {
     const secondStepHandler = () => {
         const profilesInputs = profilesSectionRef.current?.querySelectorAll('input')
         let nextStep = false;
+        let i = 2;
         profilesInputs?.forEach(input => {
+            const newProfile = {
+                _id: randomId + i.toString(),
+                name: input.value,
+                image: DefaultIcon,
+                nickname: '',
+                preferedLanguage: [],
+                ageGroup: ageGroups[0],
+                autoNextEpisode: true,
+                autoPreview: true,
+                isMainProfile: false
+            }
             if (input.value !== '') {
-                nextStep = true
-                profiles.push({
-                    name: input.value,
-                    image: DefaultIcon,
-                    nickname: '',
-                    preferedLanguage: [],
-                    ageGroup: '',
-                    autoNextEpisode: true,
-                    autoPreview: true
-                })
+                if (input.id === 'main') {
+                    nextStep = true
+                    newProfile.isMainProfile = true
+                    profiles.push(newProfile)
+                }
+                else
+                    profiles.push(newProfile)
+                i++
             }
         })
         if (nextStep) {
             setShowFirstStep(false)
             setShowSecondtStep(true)
         }
-        else
-            alert('Create at least one profile.')
+        else{
+            setProfiles([])
+            alert('Fill main profile name')
+        }
     }
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -75,27 +85,50 @@ const ConfigureProfiles: FC = () => {
         }
     }
 
-    const finishConfigurationHandler = () => {
+    const finishConfigurationHandler = async () => {
         const email = sessionStorage?.getItem('newMember')
-        if(email){
+        if (email) {
             for (const profile of profiles) {
                 profile.preferedLanguage = selectedLanguages
             }
+            const kidsProfile = {
+                _id: randomId + "1",
+                name: "Kids",
+                image: KidsIcon,
+                nickname: '',
+                preferedLanguage: [{
+                    _id: "1",
+                    code: "en",
+                    name: "English",
+                    nativeName: "English"
+                }],
+                ageGroup: ageGroups[3],
+                autoNextEpisode: true,
+                autoPreview: true,
+                isMainProfile: false
+            }
+            profiles.push(kidsProfile)
             const user = {
                 email,
-                profiles
+                profiles,
+                isActive: true
             }
-            fetch('/api/users', {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                method: "PUT",
-                body: JSON.stringify(user)
-            }).then(res => res.json()).then(data => {
-    
-            }).catch(err => console.log(err))
-            sessionStorage.removeItem('newMemeber')
-            router.push('/browse')
+            try {
+                const res = await fetch('/api/users', {
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    method: "PUT",
+                    body: JSON.stringify(user)
+                })
+                const answer = await res.json()
+                if (answer.message === 'User updated') {
+                    setCookie('ActiveUserId', answer.user._id, 7)
+                    sessionStorage.removeItem('newMember')
+                    router.push('/browse')
+                }
+            }
+            catch (err) { console.log(err) }
         }
     }
 
@@ -127,11 +160,13 @@ const ConfigureProfiles: FC = () => {
 
     function ageGroupHandler() {
         if ((currentYear - 16) <= selectedYear)
-            return 'adult'
+            return ageGroups[1]
         else if ((currentYear - 12) <= selectedYear)
-            return 'twelve'
+            return ageGroups[2]
+        else if ((currentYear - 7) <= selectedYear)
+            return ageGroups[3]
         else
-            return 'kids'
+            return ageGroups[0]
     }
 
 
@@ -151,7 +186,7 @@ const ConfigureProfiles: FC = () => {
                     </section>
                     <section className={stylesProfiles.profiles} ref={profilesSectionRef}>
                         <h4>Your profile</h4>
-                        <ProfileInput />
+                        <ProfileInput id='main' />
                         <div className={stylesProfiles.otherProfiles}>
                             <h4>Are you wanting add other profiles?</h4>
                             <ProfileInput isAddProfileIcon />

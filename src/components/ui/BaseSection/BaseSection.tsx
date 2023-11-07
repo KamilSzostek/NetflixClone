@@ -15,7 +15,7 @@ const BaseSection: FC<IBaseSectionProps> = ({title, text, children, isRight, onl
   return (<section className={`${style} ${style2}`}>
     <div>
         <h1>{title}</h1>
-        <h2>{text}</h2>
+        <h3>{text}</h3>
     </div>
     <aside>
         {children}

@@ -1,79 +1,74 @@
 import { FC, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import ProfileIcone from '../ProfileIcone/ProfileIcone';
+import AddProfile from '../AddProfile/AddProfile';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import Default from '../../../public/assets/profiles/default.png';
-import Kids from '../../../public/assets/profiles/kids.png'
-import Link from 'next/link';
+import { getCookie } from '@/helpers/cookies';
+import { IUser, IProfile } from '@/helpers/interfaces';
+import Loader from '../Loader/Loader';
 
-import styles from './ProfileSelector.module.scss'
-import { StaticImageData } from 'next/image';
-import { ILanguage } from '@/pages/signup/configureAccount/profiles';
+import styles from './ProfileSelector.module.scss';
 
-export interface IProfile {
-    name: string
-    image: StaticImageData
-    nickname: string
-    preferedLanguage: ILanguage[]
-    ageGroup: string
-    autoNextEpisode: boolean
-    autoPreview: boolean
-}
-export interface IUser {
-    email: string,
-    password: string,
-    plan: {
-        name: string,
-        quality: string,
-        price: string,
-        resolution: string
-    },
-    phoneNumber: string,
-    creditCard: {
-        firstName: string,
-        lastName: string,
-        cardNumber: string,
-        CVV: string,
-        expirationDate: string
-    },
-    profiles: IProfile[],
-    isMembershipPaid: boolean
-}
 interface IProfileSelectorProps {
     title: string,
     buttonText: string
     linkPath: string
     openEditHandler?: () => void
+    selectProfileHandler?: (profile: IProfile) => void
     isDarker?: boolean
+    profileIsSelected?: ()=>void
 }
 
-const ProfileSelector: FC<IProfileSelectorProps> = ({ title, isDarker, buttonText, linkPath, openEditHandler }) => {
+const ProfileSelector: FC<IProfileSelectorProps> = ({ title, isDarker, buttonText, linkPath, openEditHandler, selectProfileHandler, profileIsSelected }) => {
     const router = useRouter()
-    const [profiles, setProfiles] = useState<IProfile[]>([])
-    
-    useEffect(() => {
-        fetch('/api/users').then(res => res.json()).then(data => {
-            const user = data.find((user: IUser) => user.email === 'kam1@kam')
-            setProfiles(user.profiles)
-        }).catch(err => console.log(err))
-    })
 
-    const profileSelect = profiles.map((profile, key) => (router.pathname === '/ManageProfiles'
-        ? <ProfileIcone key={key} name={profile.name} image={profile.image} isEditMode />
-        : <ProfileIcone key={key} name={profile.name} image={profile.image} />))
+    const [profiles, setProfiles] = useState<IProfile[]>([])
+    const [showAddProfile, setShowAddProfile] = useState(false)
+
+    useEffect(() => {
+        const id = getCookie('ActiveUserId')?.substring(13)
+        if (id) {
+            fetch('/api/users').then(res => res.json()).then(users => {
+                const user = users.find((user: IUser) => user._id === id)
+                setProfiles(user.profiles)
+            }).catch(err => console.log(err))
+        }
+    }, [showAddProfile])
+
+    const openAddSectionHandler = () => setShowAddProfile(true)
+    const closeAddSectionHandler = () => setShowAddProfile(false)
+
+    function showHomePage (id: string){
+        sessionStorage.setItem('ProfileId', id)
+        profileIsSelected && profileIsSelected()
+    }
+
+    const profileSelect = profiles?.map((profile, key) => {
+        const clickHandler = () =>{
+            selectProfileHandler && selectProfileHandler(profile)
+            openEditHandler && openEditHandler()
+        }
+        if (router.pathname === '/ManageProfiles')
+            return <ProfileIcone key={key} name={profile.name} image={profile.image} isEditMode clickHandler={clickHandler} />
+        else
+            return <ProfileIcone key={key} name={profile.name} image={profile.image} clickHandler={()=>showHomePage(profile._id)}/>
+    })
 
     const sectionStyle = isDarker ? `${styles.darker} ${styles.selector}` : styles.selector
 
     return (
-        <section className={sectionStyle}>
-            <h1>{title}</h1>
-            <div onClick={openEditHandler}>
-                {profileSelect}
-                <ProfileIcone name='Dodaj profil' image={faCirclePlus} />
-            </div>
-            <Link href={linkPath}>{buttonText}</Link>
-        </section>
-    );
+        showAddProfile ? <AddProfile closeSectionHandler={closeAddSectionHandler} /> :
+            <section className={sectionStyle}>
+                <h1>{title}</h1>
+                <div>
+                    {profiles.length > 0 ? profileSelect : <Loader/>}
+                    {(profiles.length < 5 && profiles.length > 0) && <ProfileIcone name='Add profile' image={faCirclePlus} clickHandler={openAddSectionHandler} />}
+                </div>
+                {profiles.length > 0 && <Link href={linkPath}>{buttonText}</Link>}
+            </section>
+    )
+
 };
 
 export default ProfileSelector;

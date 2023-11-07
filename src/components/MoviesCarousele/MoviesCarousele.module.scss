@@ -1,0 +1,163 @@
+.carousele {
+    position: relative;
+    margin-bottom: 2em;
+
+    h2 {
+        margin-left: 1em;
+        margin-bottom: 1em;
+        font-size: 2.5rem;
+    }
+
+    div {
+        position: relative;
+        display: flex;
+        gap: 3px;
+        transition: transform .5s;
+
+        &:hover {
+            button {
+                svg {
+                    opacity: 1;
+                }
+            }
+        }
+
+        div {
+            div{
+                figure {
+                    position: relative;
+                    width: calc(50vw - 30px);
+    
+                    figure {
+                        left: calc(50% - 150px);
+                    }
+    
+                    img {
+                        width: 100%;
+                        aspect-ratio: 5/6;
+                        border-radius: .5em;
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            div:first-child {
+                figure:last-child {
+                    left: 0;
+                    right: auto;
+                }
+            }
+
+            div:last-child {
+                figure:last-child {
+                    left: auto;
+                    right: 0;
+                }
+            }
+        }
+
+        button {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 30px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: .25em;
+            transition: background .5s;
+            cursor: pointer;
+
+            svg {
+                color: rgba(255, 255, 255, 0.5);
+                font-size: clamp(2rem, 2.5rem + 2vw, 3rem);
+                opacity: 0;
+                transition: .5s;
+            }
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.75);
+
+                svg {
+                    color: white;
+                    transform: scale(1.1);
+                }
+            }
+        }
+
+        button:first-child {
+            left: 0;
+            z-index: 1;
+        }
+
+        button:last-child {
+            right: 0;
+        }
+    }
+}
+
+@media(min-width: 576px) {
+    .carousele {
+        div {
+            div {
+                div{
+                    figure {
+                        width: calc(33vw - 20px);
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(min-width: 768px) {
+    .carousele {
+
+        div {
+            div {
+                div{
+                    figure {
+                        width: calc(25vw - 15px);
+                    }
+    
+                    figure:last-child {
+                        left: calc(50% - 175px);
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(min-width: 992px) {
+    .carousele {
+        margin-bottom: 5em;
+
+        div {
+            div {
+                div{
+                    figure {
+                        width: calc(16.65vw - 12px);
+    
+                        img {
+                            aspect-ratio: 3/4;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(min-width: 1400px) {
+    .carousele {
+        div {
+            div {
+                div{
+                    figure {
+                        width: calc(12.5vw - 10px);
+                    }
+                }
+            }
+        }
+    }
+}

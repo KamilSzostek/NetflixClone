@@ -1,38 +1,47 @@
-.form{
+.form {
     width: clamp(320px, 320px + 20vw, 1000px);
+    min-height: 100vh;
     margin-top: 10em;
-    // font-size: clamp(1.2rem, 1.2rem + 2vw, 1.7rem);
-    h1{
+    margin-inline: 1em;
+    h1 {
         width: 100%;
         padding: 0;
         border-bottom: 1px solid #837e7e;
     }
-    button{
+
+    button {
         background: none;
         border: none;
         color: #ffffffb7;
         cursor: pointer;
     }
-    div{
+
+    div {
         display: flex;
         gap: 1em;
-        .image{
+
+        .image {
             position: relative;
             width: clamp(50px, 50px + 2vw, 250px);
             height: clamp(50px, 50px + 2vw, 250px);
-            img{
+
+            img {
                 width: inherit;
                 height: inherit;
                 border-radius: 1em;
             }
-            button{
+
+            button {
                 position: absolute;
                 right: 0;
                 bottom: 0;
                 background: none;
                 border: none;
                 cursor: pointer;
-                svg{
+
+                svg {
+                    width: 25px;
+                    height: 25px;
                     padding: .25em;
                     color: #fff;
                     background: #00000086;
@@ -40,11 +49,67 @@
                 }
             }
         }
-        .settings{
+
+        .iconSelector {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 25px;
+            background-color: #333;
+            button{
+                display: flex;
+                gap: 10px;
+                align-self: flex-start;
+                margin-left: 2em;
+                transition: color .5s;
+                &:hover{
+                    color: white;
+                }
+            }
+            div {
+                flex-direction: column;
+                margin: 1em;
+
+                h2 {
+                    color: #ffffffe7;
+                }
+
+                div {
+                    width: auto;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    flex-wrap: wrap;
+
+                    img {
+                        width: clamp(50px, 70px + 5vw, 100px);
+                        height: clamp(50px, 70px + 5vw, 100px);
+                        border: 1px solid none;
+                        transition: transform .3s;
+
+                        &:hover {
+                            border: 1px solid white;
+                            transform: scale(1.1);
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+
+        .settings {
             display: flex;
             flex-direction: column;
             gap: 1em;
-            section{
+
+            section {
                 display: flex;
                 flex-direction: column;
                 gap: 15px;
@@ -54,20 +119,22 @@
                 margin-bottom: 2em;
                 padding-bottom: 1em;
 
-                fieldset{
+                fieldset {
                     width: inherit;
                     display: flex;
                     flex-direction: column;
                     gap: 10px;
                     border: none;
                     font-size: clamp(.8rem, .9rem + 2vw, 1.2rem);
-                    label{
+
+                    label {
                         font-size: clamp(1rem, 1rem + 2vw, 1.5rem);
                         margin-top: .5em;
                         color: #ffffffb7;
-                                              
+
                     }
-                    input{
+
+                    input {
                         width: inherit;
                         padding: .35em 1em;
                         background-color: #78707077;
@@ -76,21 +143,40 @@
                         font-size: clamp(1rem, 1rem + 2vw, 1.5rem);
                         outline: none;
                     }
-                    .validnick{
+
+                    .validnick {
                         display: flex;
                         justify-content: space-between;
                     }
                 }
-                label{
+
+                label {
                     color: #ffffffb7;
-                    p{
+
+                    p {
                         margin-bottom: .5em;
                         font-size: clamp(1rem, 1rem + 2vw, 1.5rem);
                     }
-                    select{
+
+                    select {
                         background: #000000d2;
                         border-color: #ffffffc1;
                         color: #ffffffc1;
+                    }
+                }
+            }
+
+            .ageGroupSelector {
+                border-bottom: none;
+
+                div {
+                    padding: .5em;
+                    border: 1px solid rgba(0, 0, 0, 0.2);
+                    transition: border .3s;
+
+                    &:hover {
+                        border: 1px solid white;
+                        cursor: pointer;
                     }
                 }
             }

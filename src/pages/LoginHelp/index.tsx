@@ -1,12 +1,17 @@
-import {FC} from 'react';
+import { FC } from 'react';
 import NavBar from '@/components/NavBar/NavBar';
 import Head from 'next/head';
 import HelpForm from '@/components/HelpForm/HelpForm';
 import ShortFooter from '@/components/ShortFooter/ShortFooter';
+import { useLogInState } from '@/hooks/useLogInState';
+import BaseButton from '@/components/ui/BaseButton/BaseButton';
 
 import styles from '@/styles/LoginHelp.module.scss';
 
 const LoginHelp: FC = () => {
+    const loggedIn = useLogInState()
+
+    const logoutHandler = () => sessionStorage.removeItem('newMember')
     return (
         <div className={styles.login}>
             <Head>
@@ -15,12 +20,14 @@ const LoginHelp: FC = () => {
                 <link rel="icon" href="/favicon.ico" />
                 <title>Netflix</title>
             </Head>
-            <NavBar linkLogo showSignButton />
+            <NavBar linkLogo >
+                {loggedIn ? <BaseButton text='sign out' linkPath='/' onClick={logoutHandler} /> : <BaseButton text='sign in' linkPath='/login' />}
+            </NavBar>
             <main>
                 <HelpForm />
                 <p>This page is protected by Google reCAPTCHA to ensure you're not a bot. Learn more.</p>
             </main>
-            <ShortFooter/>
+            <ShortFooter />
         </div>
     );
 };

@@ -1,0 +1,48 @@
+.logMenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        width: clamp(35px, 40px + 1vw, 50px);
+        height: clamp(35px, 40px + 1vw, 50px);
+    }
+
+    svg {
+        width: clamp(15px, 20px + 1vw, 25px);
+        height: clamp(10px, 12px + 1vw, 15px);
+    }
+}
+
+.profileMenu {
+    flex-direction: column;
+    text-transform: capitalize;
+
+    figure {
+        padding: 1em;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    span {
+        text-align: left;
+        padding: .5em;
+    }
+}
+
+.notificationList{
+    li{
+        display: flex;
+        align-items: flex-start;
+        gap: 5px;
+        font-size: 1.4rem;
+        text-align: left;
+    }
+}

@@ -10,31 +10,11 @@ import Devices from '../../../public/assets/Devices.png'
 import StepCounter from '@/components/StepCounter/StepCounter';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import { emailValidation, passwordValidation } from '@/helpers/validationFunctions';
-import { ObjectId } from 'mongodb';
 import { initialSelectedPlan } from './planform';
-import KidsIcon from '../../../public/assets/profiles/kids.png'
+import { IUser } from '@/helpers/interfaces';
+import Link from 'next/link';
 
-export interface IUser {
-    _id: ObjectId,
-    email: string,
-    password: string
-    isMembershipPaid: boolean
-}
-
-export const kidsProfile = {
-    name: 'Kids',
-    image: KidsIcon,
-    nickname: '',
-    preferedLanguage: {
-        _id: "1",
-        code: "en",
-        name: "English",
-        nativeName: "English"
-    },
-    ageGroup: 'Kids',
-    autoNextEpisode: true,
-    autoPreview: true
-}
+import styles from '../../styles/SignUp.module.scss'
 
 const SignUp: FC = () => {
     const router = useRouter()
@@ -45,6 +25,7 @@ const SignUp: FC = () => {
     const [passwordValidMessage, setPasswordValidMessage] = useState('')
     const [showFirstSection, setShowFirstSection] = useState(true)
     const [showSecondSection, setShowSecondSection] = useState(false)
+    const [accountExisted, setAccountExisted] = useState(false)
 
     const emialInputRef = useRef<HTMLInputElement>(null)
     const passwordInputRef = useRef<HTMLInputElement>(null)
@@ -58,10 +39,14 @@ const SignUp: FC = () => {
     const linkArr = ['FAQ', 'Cancel Membership', 'Help Center', 'Netflix Shop', 'Terms of Use', 'Privacy', 'Cookie Preferences', 'Corporate Information', 'Impressum']
 
     const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        accountExisted && setAccountExisted(false)
         sessionStorage.setItem('newMember', e.currentTarget.value)
         setEmail(e.currentTarget.value)
     }
-    const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.currentTarget.value)
+    const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        accountExisted && setAccountExisted(false)
+        setPassword(e.currentTarget.value)
+    }
 
     const showSecondSectionHandler = () => {
         setShowFirstSection(false)
@@ -79,10 +64,10 @@ const SignUp: FC = () => {
         }
     }
 
-    function isTypedEmailInDatabase(data: [IUser]) {
-        for (const user of data) {
-            if (user.email === sessionStorage.getItem('newMember'))
-                return true
+    function isTypedEmailInDatabase(users: IUser[]) {
+        for (const user of users) {
+            if (user.email === email)
+                return user
         }
         return false
     }
@@ -103,21 +88,31 @@ const SignUp: FC = () => {
                     CVV: 0,
                     expirationDate: ''
                 },
-                profiles: [kidsProfile],
-                isMembershipPaid: false
+                profiles: [],
+                isMembershipPaid: false,
+                isActive: false
             })
             setPasswordValidMessage('')
             try {
                 const response = await fetch('/api/users') //get all users from database
-                const data: [IUser] = await response.json()
-                if (isTypedEmailInDatabase(data)) {//if email isn't in database add new user to database
-                    fetch('/api/users', {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        method: 'PUT',
-                        body: newUser
-                    }).then(res => res.json()).then(data => router.push('/signup/planform')).catch(err => console.error(err))
+                const users: IUser[] = await response.json()
+                const user = isTypedEmailInDatabase(users)
+                if (user) {//if user with same email like from input field is in database update user password in database otherwise add new user
+                    if (user.isActive) {
+                        setAccountExisted(true)
+                    }
+                    else {
+                        fetch('/api/users', {
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            method: 'PUT',
+                            body: newUser
+                        }).then(res => res.json()).then(data => {
+                            router.push('/signup/planform')
+                        }
+                        ).catch(err => console.error(err))
+                    }
                 }
                 else {
                     fetch('/api/users', {
@@ -126,7 +121,7 @@ const SignUp: FC = () => {
                         },
                         method: 'POST',
                         body: newUser
-                    }).then(res => res.json()).then(data => router.push('/signup/planform')).catch(err => console.error(err))
+                    }).then(res => res.json()).then(() => router.push('/signup/planform')).catch(err => console.error(err))
                 }
             }
             catch (error) {
@@ -162,6 +157,11 @@ const SignUp: FC = () => {
                             <FieldWithValidation message={passwordValidMessage}>
                                 <CustomInput placeholder='Add a password' inputValue={password} inputRef={passwordInputRef} inputType='password' changeHandler={passwordChangeHandler} isLight />
                             </FieldWithValidation>
+                            {accountExisted && (
+                                <div className={styles.infoFrame}>
+                                    <span>We already have account with that email. Change email or try </span>
+                                    <Link href={'/login'} onClick={() => sessionStorage.removeItem('newMember')}>Log In</Link>.
+                                </div>)}
                             <label htmlFor="remember"><input id='remember' type='checkbox' /><span>Yes, please email me Netflix special offers.</span></label>
                             <BaseButton text='Next' />
                         </form>

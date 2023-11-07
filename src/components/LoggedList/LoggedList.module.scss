@@ -1,0 +1,35 @@
+ .list {
+     display: none;
+     a{
+        color: #ffffffb4;
+        text-decoration: none;
+     }
+ }
+
+ @media (min-width: 992px) {
+     .expandedList {
+         display: none !important;
+     }
+
+     .list {
+         flex-grow: 1;
+         display: flex;
+         gap: 20px;
+         font-size: clamp(1rem, 1.2rem + 1.4vw, 1.5rem);
+         margin-left: 2em;
+         list-style-type: none;
+
+         li {
+             color: #ffffffb4;
+             cursor: pointer;
+             transition: color .5s;
+
+             &:hover {
+                 color: #fff;
+             }
+             .active{
+                color: #fff;
+             }
+         }
+     }
+ }

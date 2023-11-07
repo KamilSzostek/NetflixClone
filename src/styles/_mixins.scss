@@ -1,5 +1,5 @@
-@mixin checkmark{
-        &::before{
+@mixin checkmark {
+    &::before {
         content: '';
         position: absolute;
         top: 0;
@@ -15,7 +15,7 @@
     }
 }
 
-@mixin customcheckbox{
+@mixin customcheckbox {
     input[type="checkbox"] {
         cursor: pointer;
         -webkit-appearance: none;
@@ -29,27 +29,27 @@
         width: 19px;
         border: 1px solid white;
         color: white;
+        &:after {
+            content: ' ';
+            position: relative;
+            left: 40%;
+            top: 20%;
+            width: 15%;
+            height: 40%;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(50deg);
+            display: none;
+        }
     }
-
     input[type="checkbox"]:checked {
         background: rgb(22, 211, 22);
         color: white;
+
+        &:after {
+            display: block;
+        }
     }
 
-    input[type="checkbox"]:after {
-        content: ' ';
-        position: relative;
-        left: 40%;
-        top: 20%;
-        width: 15%;
-        height: 40%;
-        border: solid #fff;
-        border-width: 0 2px 2px 0;
-        transform: rotate(50deg);
-        display: none;
-    }
 
-    input[type="checkbox"]:checked:after {
-        display: block;
-    }
 }

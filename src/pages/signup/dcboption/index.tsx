@@ -30,7 +30,6 @@ const DCBOption: FC = () => {
 
     const [phoneNumber, setPhoneNumber] = useState('')
     const [validMessage, setValidMessage] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
 
     const validMessageHandler = (message: string) => setValidMessage(message)
 
@@ -41,15 +40,9 @@ const DCBOption: FC = () => {
         if (newAccountToAdd === undefined)
             router.push('/signup')
         else if (plan._id === ''){
-            console.log('skok');
             router.push('/signup/planform')
         }
     })
-
-    useEffect(() => {
-        const button = buttonRef.current
-        button && button.classList.toggle('loadingButton')
-    }, [isLoading])
 
     const phoneNumberHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value

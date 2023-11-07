@@ -1,9 +1,10 @@
-import { FC, RefObject } from 'react';
+import { FC, LegacyRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Link from 'next/link';
 
 import styles from './BaseButton.module.scss'
+import { RefType } from 'mongoose';
 
 interface IBaseButtonProps {
   text: string,
@@ -11,6 +12,7 @@ interface IBaseButtonProps {
   icon?: IconDefinition,
   linkPath?: string,
   onClick?: ()=>void,
+  ref?: LegacyRef<HTMLButtonElement>
 }
 
 const BaseButton: FC<IBaseButtonProps> = ({ text, isBig, icon, linkPath, onClick, ref }) => {

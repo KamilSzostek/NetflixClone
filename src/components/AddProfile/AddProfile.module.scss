@@ -1,0 +1,117 @@
+.addProfile {
+    h2 {
+        width: 100%;
+        color: #ffffffcd;
+        font-size: clamp(2.5rem, calc(3em + 2vw), 3.2rem);
+        text-align: left;
+    }
+
+    p {
+        margin-bottom: 1em;
+        color: #ffffff31;
+        font-size: clamp(1rem, calc(1.2em + 2vw), 1.5rem);
+    }
+
+    form {
+        padding-block: 2em;
+
+        div:first-child {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 2em;
+
+            img {
+                margin-right: 2em;
+            }
+
+            input {
+                padding: .5em 1em;
+                background-color: #e0d3d3;
+                border: none;
+
+                &::placeholder {
+                    color: rgba(0, 0, 0, 0.7);
+                }
+            }
+
+            label {
+                display: flex;
+                gap: 5px;
+                align-items: center;
+                font-size: 1.5rem;
+
+                input[type="checkbox"] {
+                    width: 30px;
+                    height: 30px;
+                    cursor: pointer;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    outline: 0;
+                    background: #ffffff0b;
+                    border: 1px solid #ffffff4a;
+
+                    &:after {
+                        content: ' ';
+                        display: none;
+                        position: relative;
+                        left: 50%;
+                        top: 20%;
+                        width: 10px;
+                        height: 20px;
+                        border: solid #1e1212;
+                        border-width: 0 2px 2px 0;
+                        transform: translate(-50%, -50%) rotate(45deg);
+                    }
+
+                    &:checked {
+                        background: rgba(188, 189, 188, 0.4);
+                        color: rgb(19, 18, 18);
+
+                        &:after {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
+
+        div:last-child {
+            display: flex;
+            gap: 1em;
+            margin-top: 1em;
+
+            button {
+                padding: .5em 1em;
+                font-weight: bold;
+                transition: .5;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            button:first-child {
+                background: #fff;
+                border: none;
+
+                &:hover {
+                    background-color: red;
+                    color: #fff;
+                }
+            }
+
+            button:last-child {
+                background: #ffffff03;
+                border: 1px solid #ffffff78;
+                color: #ffffff71;
+
+                &:hover {
+                    border-color: #fff;
+                    color: #fff;
+                }
+            }
+        }
+    }
+}

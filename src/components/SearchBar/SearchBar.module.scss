@@ -1,0 +1,31 @@
+.searchBar {
+    display: flex;
+    width: 40px;
+    padding: .75em;
+    border: 1px solid rgba(255, 255, 255, 0);
+    overflow: hidden;
+    transform-origin: left;
+    transition: 1s .15s;
+    cursor: pointer;
+
+    input {
+        outline: none;
+        width: 0;
+        margin-left: 10px;
+        background-color: #ffffff00;
+        border: none;
+        color: white;
+        transition: 1s .15s;
+    }
+}
+.active {
+    width: 200px;
+    background-color: black;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    transition: 1s;
+    z-index: 10;
+    input{
+        width: 150px;
+        transition: 1s;
+    }
+}

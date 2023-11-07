@@ -3,6 +3,7 @@ import SignInForm from '@/components/SignInForm/SignInForm';
 import NavBar from '@/components/NavBar/NavBar';
 import Head from 'next/head';
 import ShortFooter from '@/components/ShortFooter/ShortFooter';
+import BaseButton from '@/components/ui/BaseButton/BaseButton';
 
 import styles from '@/styles/Login.module.scss';
 
@@ -16,11 +17,13 @@ const Login: FC = () => {
                 <title>Netflix</title>
             </Head>
             <div className={styles.shadow} />
-            <NavBar linkLogo />
+            <NavBar linkLogo >
+                <BaseButton text='sign in' linkPath='/login' />
+            </NavBar>
             <main>
                 <SignInForm />
             </main>
-            <ShortFooter/>
+            <ShortFooter />
         </div>
     );
 };

@@ -1,7 +1,6 @@
 import {FC, ReactElement} from 'react';
 import styles from './FieldWithValidation.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCross } from '@fortawesome/free-solid-svg-icons';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 
 interface IFieldWithValidationProps {

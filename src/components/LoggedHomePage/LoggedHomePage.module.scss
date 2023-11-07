@@ -1,0 +1,50 @@
+.main{
+    display: flex;
+    flex-direction: column-reverse;
+    margin-top: 150px;
+    padding-bottom: 12em;
+    border-bottom: 5px solid rgba(0, 0, 0, 0.3);
+    .searchPhrase{
+        display: flex;
+        justify-content: space-between;
+        margin-inline: 5vw;
+        margin-bottom: 1em;
+        padding: 1em;
+        opacity: .9;
+        text-align: center;
+        span{
+            font-size: clamp(1.5rem, 1.6rem + 2vw, 2rem);
+        }
+    }
+    .searchResults{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-inline: 5vw;
+        div{
+            figure{
+                img{
+                    width: 250px;
+                    height: 300px;
+                }
+            }
+            figure:last-child{
+                left: calc(50% - 150px);
+                width: 300px;
+            }
+        }
+
+        button{
+            cursor: pointer;
+            svg{
+                transition: transform .5s;
+            }
+        }
+        button:hover{
+            svg{
+                transform: scale(1.2);
+            }
+        }
+    }
+}

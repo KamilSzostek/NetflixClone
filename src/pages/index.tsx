@@ -1,11 +1,21 @@
 import Head from 'next/head'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { getCookie } from '@/helpers/cookies'
+import {  } from '@/store/isLogged'
 import Header from '@/components/Header/Header'
-import Main from '@/components/Main/Main'
+import HomePage from '@/components/HomePage/HomePage'
 import Footer from '@/components/Footer/Footer'
 import { footerLinkArr } from '@/helpers/footerLinkLists'
 
 export default function Home() {
-
+  const router = useRouter()
+  const [reRender, setReRender] = useState(false)
+  useEffect(() => {
+    const id = getCookie('ActiveUserId')?.substring(13)
+    id ? router.push('/browse') : setReRender(true)
+  }, [])
+  if(reRender)
   return (
     <>
       <Head>
@@ -15,7 +25,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <Main />
+      <HomePage />
       <Footer linkList={footerLinkArr}/>
     </>
   )

@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useRouter } from "next/router"
-import { IUser } from "@/pages/signup"
+import { IUser } from "@/helpers/interfaces"
 
 export const useConfigureAccountNavGuard = (emailHandler?: (email: string) => void) => {
     const router = useRouter()

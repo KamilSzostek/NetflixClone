@@ -44,7 +44,7 @@ const Membership: FC = () => {
     }
     return (
         <section className={styles.newsletter}>
-            <h3>Ready to watch? Enter your email to create or restart your membership.</h3>
+            <h4>Ready to watch? Enter your email to create or restart your membership.</h4>
             <form onSubmit={submitHandler}>
                 <div>
                     <CustomInput placeholder='Email address' inputValue={inputValue} inputRef={inputRef} changeHandler={changeHandler} />

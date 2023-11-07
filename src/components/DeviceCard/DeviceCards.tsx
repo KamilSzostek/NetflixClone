@@ -22,7 +22,7 @@ const DeviceCard: FC<IDeviceCardProps> = ({ device }) => {
         <div className={styles.device} ref={deviceRef} onClick={()=>{
             deviceRef.current?.classList.toggle(`${styles.selectedDevice}`)
         }}>
-            <Image src={icon} alt={name} width={150} height={150} />
+            <Image src={icon} alt={name} width={150} height={150} priority/>
             <h3>{name}</h3>
             <p>{description}</p>
         </div>

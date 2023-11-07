@@ -3,7 +3,7 @@ import { NextApiResponse } from "next";
 
 export async function connectDataBase(res: NextApiResponse) {
   try{
-    const client = await MongoClient.connect("mongodb+srv://user:kMdYJhAY4ReopkEI@events.8r7or1u.mongodb.net/?retryWrites=true&w=majority");
+    const client = await MongoClient.connect(`${process.env.MONGODB_CONNECTION_STRING}`);
     return client;
   }
   catch(err){
