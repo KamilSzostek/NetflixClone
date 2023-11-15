@@ -44,7 +44,7 @@ const GiftOption: FC = () => {
         }
     }
 
-    if (useShowPageSignup()) return (
+    return (
         <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
             <SignUpSection width='medium' showSection={true} isTextLeftAllign>
                 <>

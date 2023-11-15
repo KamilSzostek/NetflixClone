@@ -13,9 +13,10 @@ import { emailValidation, passwordValidation } from '@/helpers/validationFunctio
 import { initialSelectedPlan } from './planform';
 import { IUser } from '@/helpers/interfaces';
 import Link from 'next/link';
+import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 import styles from '../../styles/SignUp.module.scss'
-import { useShowPageSignup } from '@/hooks/useShowPageSignup';
+import { encrypt } from '@/helpers/dataEncryption';
 
 const SignUp: FC = () => {
     const router = useRouter()
@@ -39,15 +40,9 @@ const SignUp: FC = () => {
     const totalStepInteger = 3
     const linkArr = ['FAQ', 'Cancel Membership', 'Help Center', 'Netflix Shop', 'Terms of Use', 'Privacy', 'Cookie Preferences', 'Corporate Information', 'Impressum']
 
-    const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        accountExisted && setAccountExisted(false)
-        sessionStorage.setItem('newMember', e.currentTarget.value)
-        setEmail(e.currentTarget.value)
-    }
-    const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        accountExisted && setAccountExisted(false)
-        setPassword(e.currentTarget.value)
-    }
+    const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.currentTarget.value)
+    
+    const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.currentTarget.value)
 
     const showSecondSectionHandler = () => {
         setShowFirstSection(false)
@@ -61,16 +56,8 @@ const SignUp: FC = () => {
             return newMember
         }
         catch (e) {
-            return ''
+            return 'No email in session storage'
         }
-    }
-
-    function isTypedEmailInDatabase(users: IUser[]) {
-        for (const user of users) {
-            if (user.email === email)
-                return user
-        }
-        return false
     }
 
     const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -96,9 +83,9 @@ const SignUp: FC = () => {
             })
             setPasswordValidMessage('')
             try {
-                const response = await fetch('/api/users')
-                const users: IUser[] = await response.json()
-                const user = isTypedEmailInDatabase(users)
+                const response = await fetch(`/api/users/${email}`)
+                const user: IUser = await response.json()
+                user.isActive && setAccountExisted(true)
                 if (user) {
                     if (user.isActive) {
                         setAccountExisted(true)
@@ -110,7 +97,8 @@ const SignUp: FC = () => {
                             },
                             method: 'PUT',
                             body: newUser
-                        }).then(res => res.json()).then(data => {
+                        }).then(res => res.json()).then(() => {
+                            sessionStorage.setItem('newMember', email)
                             router.push('/signup/planform')
                         }
                         ).catch(err => console.error(err))
@@ -123,7 +111,12 @@ const SignUp: FC = () => {
                         },
                         method: 'POST',
                         body: newUser
-                    }).then(res => res.json()).then(() => router.push('/signup/planform')).catch(err => console.error(err))
+                    }).then(res => res.json()).then((data) => {
+                        console.log(encrypt(password));
+                        console.log(data.user.hash);
+                        sessionStorage.setItem('newMember', email)
+                        // router.push('/signup/planform')
+                    }).catch(err => console.error(err))
                 }
             }
             catch (error) {
@@ -135,7 +128,7 @@ const SignUp: FC = () => {
             password === '' ? setPasswordValidMessage('Password is required.') : (passwordValidation(password) ? setPasswordValidMessage('') : setPasswordValidMessage('Your password must contain between 4 and 60 characters.'))
         }
     }
-    if (useShowPageSignup()) return (
+    return (
         <SignUpLayout children2={<Footer linkList={linkArr} lightBg />}>
             <>
                 <SignUpSection width='small' showSection={showFirstSection} showSectionHandler={() => setShowFirstSection(!showFirstSection)}>

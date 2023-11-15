@@ -66,7 +66,7 @@ const PlanForm: FC = () => {
         }
     }
 
-    if (useShowPageSignup()) return (
+    return (
         <SignUpLayout children2={<Footer linkList={linkArr} lightBg />}>
             <SignUpSection width='small' showSection={showFirstSection}>
                 <>

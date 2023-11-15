@@ -122,7 +122,7 @@ const CreditOption: FC = () => {
 
         }
     }
-    if (useShowPageSignup()) return (
+    return (
         <SignUpLayout>
             <SignUpSection width='medium' showSection={true}>
                 <>

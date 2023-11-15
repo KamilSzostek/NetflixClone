@@ -65,7 +65,7 @@ const DCBOption: FC = () => {
         }
     }
 
-    if (useShowPageSignup()) return (
+    return (
         <SignUpLayout>
             <SignUpSection width='medium' showSection={true} isTextLeftAllign>
                 <>

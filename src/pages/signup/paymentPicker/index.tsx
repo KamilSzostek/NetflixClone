@@ -17,7 +17,7 @@ import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 import divStyles from '../../../styles/PaymentPicker.module.scss'
 
 const PaymentPicker: FC = () => {
-    if (useShowPageSignup()) return (
+    return (
         <SignUpLayout>
             <SignUpSection width='medium' showSection={true}>
                 <>

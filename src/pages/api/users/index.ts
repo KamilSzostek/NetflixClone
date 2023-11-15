@@ -91,7 +91,7 @@ export default async function handler(
       res
         .status(202)
         .json({ message: "User updated", user:{
-          isMembershipPaid,
+          isMembershipPaid: updatedUser?.value?.isMembershipPaid,
           hash: updatedUser?.value?.password
         }});
       client?.close;

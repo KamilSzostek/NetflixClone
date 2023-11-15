@@ -24,7 +24,7 @@ const ConfigureDevices: FC<IConfigureDeviceProps> = ({ devices }) => {
 
     const clickHandler = () => router.push('/signup/configureAccount/profiles')
 
-    if (useShowPageSignup()) return (
+    return (
         <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
             <SignUpSection showSection={true} width='large' isTextLeftAllign>
                 <div className={styles.container}>

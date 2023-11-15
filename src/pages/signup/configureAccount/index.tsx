@@ -16,7 +16,7 @@ const ConfigureAccount: FC = () => {
         email && setEmail(email)
     }, [])
 
-    if (useShowPageSignup()) return (
+    return (
         <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
             <SignUpSection showSection={true} width='small' isTextLeftAllign>
                 <>

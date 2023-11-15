@@ -16,7 +16,7 @@ import { signIn } from 'next-auth/react';
 
 import styles from '../../../../styles/configureAccount.module.scss'
 import stylesProfiles from '../../../../styles/ConfigureProfiles.module.scss'
-import { decrypt } from '@/helpers/dataEncryption';
+import { decrypt, encrypt } from '@/helpers/dataEncryption';
 import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 
@@ -106,7 +106,7 @@ const ConfigureProfiles: FC = () => {
                 autoPreview: true,
                 isMainProfile: false
             }
-            profiles.push(kidsProfile)
+            !profiles.includes(kidsProfile) && profiles.push(kidsProfile)
             const user = {
                 email,
                 profiles,
@@ -122,14 +122,12 @@ const ConfigureProfiles: FC = () => {
                 })
                 const answer = await res.json()
                 if (answer.message === 'User updated') {
-                    console.log(answer.hash);
-                    decrypt('1234567')
+                    console.log(answer.user.hash);
                     const status = await signIn('credentials', {
                         redirect: false,
                         email: email,
                         password: ''
-                    });
-                    console.log(status?.ok);
+                    })
                     if(status?.ok){
                         sessionStorage.removeItem('newMember')
                         router.push('/browse')
@@ -178,7 +176,7 @@ const ConfigureProfiles: FC = () => {
     }
 
 
-    if (useShowPageSignup()) return (
+    return (
         <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
             <SignUpSection showSection={showFirstStep} width='large' isTextLeftAllign>
                 <div className={styles.container}>

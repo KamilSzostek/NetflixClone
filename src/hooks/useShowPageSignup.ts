@@ -21,7 +21,7 @@ export const useShowPageSignup = () => {
             }
             else return res.json()
         }).then((user: IUser) => {
-            console.log(user);
+            // console.log(user);
             if(user.plan.price === '' && currentPath !== '/signup/planform'){
                 router.replace('/signup/planform') 
             }
