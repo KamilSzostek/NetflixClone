@@ -1,4 +1,7 @@
 import { FC, useEffect, useState } from 'react';
+import { StaticImageData } from 'next/image';
+import { useDispatch } from 'react-redux';
+import { changeIsProfileSelected, setIsAdultContent, setProfileIcon, setProfileName } from '@/store/selectedProfile';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import ProfileIcone from '../ProfileIcone/ProfileIcone';
@@ -11,48 +14,45 @@ import Loader from '../Loader/Loader';
 import styles from './ProfileSelector.module.scss';
 
 interface IProfileSelectorProps {
+    profiles: IProfile[]
     title: string,
     buttonText: string
     linkPath: string
     openEditHandler?: () => void
     selectProfileHandler?: (profile: IProfile) => void
     isDarker?: boolean
-    profileIsSelected?: ()=>void
 }
 
-const ProfileSelector: FC<IProfileSelectorProps> = ({ title, isDarker, buttonText, linkPath, openEditHandler, selectProfileHandler, profileIsSelected }) => {
-    const router = useRouter()
+const ProfileSelector: FC<IProfileSelectorProps> = ({ title, isDarker, buttonText, linkPath, openEditHandler, selectProfileHandler, ...props }) => {
+    const dispatch = useDispatch()
 
-    const [profiles, setProfiles] = useState<IProfile[]>([])
+    const router = useRouter()
+    const[profiles, setProfiles] = useState<IProfile[]>(props.profiles)
     const [showAddProfile, setShowAddProfile] = useState(false)
 
-    useEffect(() => {
-        const id = getCookie('ActiveUserId')?.substring(13)
-        if (id) {
-            fetch('/api/users').then(res => res.json()).then(users => {
-                const user = users.find((user: IUser) => user._id === id)
-                setProfiles(user.profiles)
-            }).catch(err => console.log(err))
-        }
-    }, [showAddProfile])
-
     const openAddSectionHandler = () => setShowAddProfile(true)
-    const closeAddSectionHandler = () => setShowAddProfile(false)
+    const closeAddSectionHandler = (newProfiles?: IProfile[]) => {
+        setShowAddProfile(false)
+        newProfiles && setProfiles(newProfiles)
+    }
 
-    function showHomePage (id: string){
+    function showHomePage(id: string, name: string, image: StaticImageData, ageGroup: string) {
         sessionStorage.setItem('ProfileId', id)
-        profileIsSelected && profileIsSelected()
+        dispatch(setProfileName(name))
+        dispatch(setProfileIcon(image))
+        dispatch(changeIsProfileSelected(true))
+        ageGroup === 'adults' && dispatch(setIsAdultContent(true))
     }
 
     const profileSelect = profiles?.map((profile, key) => {
-        const clickHandler = () =>{
+        const clickHandler = () => {
             selectProfileHandler && selectProfileHandler(profile)
             openEditHandler && openEditHandler()
         }
         if (router.pathname === '/ManageProfiles')
             return <ProfileIcone key={key} name={profile.name} image={profile.image} isEditMode clickHandler={clickHandler} />
         else
-            return <ProfileIcone key={key} name={profile.name} image={profile.image} clickHandler={()=>showHomePage(profile._id)}/>
+            return <ProfileIcone key={key} name={profile.name} image={profile.image} clickHandler={() => showHomePage(profile._id, profile.name, profile.image, profile.ageGroup.name)} />
     })
 
     const sectionStyle = isDarker ? `${styles.darker} ${styles.selector}` : styles.selector
@@ -62,7 +62,7 @@ const ProfileSelector: FC<IProfileSelectorProps> = ({ title, isDarker, buttonTex
             <section className={sectionStyle}>
                 <h1>{title}</h1>
                 <div>
-                    {profiles.length > 0 ? profileSelect : <Loader/>}
+                    {profiles.length > 0 ? profileSelect : <Loader />}
                     {(profiles.length < 5 && profiles.length > 0) && <ProfileIcone name='Add profile' image={faCirclePlus} clickHandler={openAddSectionHandler} />}
                 </div>
                 {profiles.length > 0 && <Link href={linkPath}>{buttonText}</Link>}

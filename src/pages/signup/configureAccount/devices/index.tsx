@@ -1,4 +1,6 @@
-import { FC, useLayoutEffect, useState } from 'react';
+import { FC } from 'react';
+import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
 import StepCounter from '@/components/StepCounter/StepCounter';
@@ -6,24 +8,23 @@ import BaseButton from '@/components/ui/BaseButton/BaseButton';
 import DeviceCard, { IDevice } from '@/components/DeviceCard/DeviceCards';
 import Footer from '@/components/Footer/Footer';
 import { footerLinkArr2 } from '@/helpers/footerLinkLists';
+import { getCollectionDB } from '@/helpers/dbConnection';
 
 import stylesDevices from '../../../../styles/ConfigureDevices.module.scss'
 import styles from '../../../../styles/configureAccount.module.scss'
-import { useConfigureAccountNavGuard } from '@/hooks/useConfigureAccountNavGuard';
+import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
-const ConfigureDevices: FC = () => {
-    const [devices, setDevices] = useState<IDevice[]>([])
+interface IConfigureDeviceProps {
+    devices: IDevice[]
+}
 
-    useConfigureAccountNavGuard()
-    useLayoutEffect(() => {
-        fetch("/api/devices")
-            .then((res) => res.json())
-            .then((data) => { setDevices(data) })
-            .catch((err) => console.log(err))
-    }, [])
-
+const ConfigureDevices: FC<IConfigureDeviceProps> = ({ devices }) => {
+    const router = useRouter()
     const devicesElement = devices.map((device: IDevice) => <DeviceCard key={device._id} device={device} />)
-    return (
+
+    const clickHandler = () => router.push('/signup/configureAccount/profiles')
+
+    if (useShowPageSignup()) return (
         <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
             <SignUpSection showSection={true} width='large' isTextLeftAllign>
                 <div className={styles.container}>
@@ -40,7 +41,7 @@ const ConfigureDevices: FC = () => {
                             <h3>Other device</h3>
                             <p>Use Netflix on other device with internet access</p>
                         </div>
-                        <BaseButton text='Next' linkPath='/signup/configureAccount/profiles' />
+                        <BaseButton text='Next' onClick={clickHandler} />
                     </section>
                 </div>
             </SignUpSection>
@@ -49,3 +50,19 @@ const ConfigureDevices: FC = () => {
 };
 
 export default ConfigureDevices;
+
+export const getServerSideProps: GetServerSideProps<IConfigureDeviceProps> = async () => {
+    const db = await getCollectionDB('Devices')
+    const devices = await db.collection.find().toArray()
+    db.client.close()
+    return {
+        props: {
+            devices: devices.map(device => ({
+                _id: device._id.toString(),
+                name: device.name,
+                icon: device.icon,
+                description: device.description
+            }))
+        }
+    }
+} 

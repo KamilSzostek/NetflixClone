@@ -14,7 +14,15 @@
 
     form {
         padding-block: 2em;
-
+        .container{
+            small{
+                height: 15px;
+                padding-top: 5px;
+                display: block;
+                color: orange;
+                font-size: 1.1rem;
+            }
+        }
         div:first-child {
             display: flex;
             align-items: center;

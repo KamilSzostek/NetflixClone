@@ -168,12 +168,25 @@
 
             .ageGroupSelector {
                 border-bottom: none;
+                span{
+                    font-size: 1.2rem;
+                }
+                p{
+                    font-size: 1.1rem;
+                }
 
-                div {
-                    padding: .5em;
+                .ageGroup {
+                    display: grid;
+                    grid-template-columns: .5fr 1fr;
+                    padding: 1em;
                     border: 1px solid rgba(0, 0, 0, 0.2);
                     transition: border .3s;
-
+                    span{
+                        font-size: 1.1rem;
+                    }
+                    p{
+                        opacity: .8;
+                    }
                     &:hover {
                         border: 1px solid white;
                         cursor: pointer;

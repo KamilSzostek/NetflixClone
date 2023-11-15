@@ -12,17 +12,30 @@
         width: clamp(15px, 20px + 1vw, 25px);
         height: clamp(10px, 12px + 1vw, 15px);
     }
+    div:last-child{
+        div{
+            left: -5%;
+            &::before{
+                left: 75%;
+            }
+        }
+    }
 }
 
 .profileMenu {
     flex-direction: column;
     text-transform: capitalize;
-
+    h4{
+        margin-block: .5em;
+        padding-right: 1.5em;
+        text-align: right;
+    }
     figure {
         padding: 1em;
         display: flex;
         align-items: flex-end;
         gap: 10px;
+        cursor: pointer;
     }
 
     ul {
@@ -34,6 +47,7 @@
     span {
         text-align: left;
         padding: .5em;
+        cursor: pointer;
     }
 }
 
@@ -44,5 +58,9 @@
         gap: 5px;
         font-size: 1.4rem;
         text-align: left;
+        img{
+            width: 50;
+            height: 40;
+        }
     }
 }

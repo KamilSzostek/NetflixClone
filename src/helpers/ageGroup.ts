@@ -1,7 +1,7 @@
 export const ageGroups = [{
     name: "adults",
     title: "Every age group",
-    description: "Show on this profile titles from every age group."
+    description: "Show on this profile titles for every age group."
 },
 {
     name: "sixteen",

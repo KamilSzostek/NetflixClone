@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
-import { planSelector } from '@/store/typePlan';
+import { planPriceSelector, planNameSelector } from '@/store/plan';
 
 import styles from './ChoosenPackage.module.scss'
 
@@ -10,13 +10,14 @@ interface IChoosenPackageProps {
 }
 
 const ChoosenPackage: FC<IChoosenPackageProps> = ({ children }) => {
-    const plan = useSelector(planSelector)
+    const price = useSelector(planPriceSelector)
+    const name = useSelector(planNameSelector)
     return (
         <section className={styles.package}>
             <div>
                 <div>
-                    <span>€{plan.price}/month</span>
-                    <span>{plan.name}</span>
+                    <span>€{price}/month</span>
+                    <span>{name}</span>
                 </div>
                 <Link href='/signup/planform'>Change</Link>
             </div>

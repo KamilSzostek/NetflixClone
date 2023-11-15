@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { connectDataBase } from "@/helpers/dbConnection";
-import { ObjectId } from "mongodb";
+import { encrypt } from "@/helpers/dataEncryption";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,7 +10,6 @@ export default async function handler(
   const client = await connectDataBase(res);
   const db = client?.db();
   const {
-    id,
     email,
     plan,
     password,
@@ -22,7 +21,13 @@ export default async function handler(
   } = body;
   if (method === "GET") {
     try {
-      const users = await db?.collection("NetflixUsers").find().toArray();
+      let users = await db?.collection("NetflixUsers").find().toArray()
+      users = users?.map(user => ({
+        _id: user._id,
+        email: user.email,
+        plan: user.plan,
+        profiles: user.profiles
+      }));
       client?.close;
       return res.status(200).json(users);
     } catch (error) {
@@ -30,6 +35,7 @@ export default async function handler(
     }
   } else if (method === "POST") {
     try {
+      body.password = encrypt(body.password)
         await db!.collection("NetflixUsers").insertOne(body);
         return res.status(201).json({ message: "User added", user: req.body });
     } catch (error) {
@@ -62,7 +68,7 @@ export default async function handler(
       if (password) {
         updatedUser = await db!
           .collection("NetflixUsers")
-          .findOneAndUpdate({ email: email }, { $set: { password: password } });
+          .findOneAndUpdate({ email: email }, { $set: { password: encrypt(password) } });
       }
       if (creditCard) {
         updatedUser = await db!
@@ -84,7 +90,10 @@ export default async function handler(
       }
       res
         .status(202)
-        .json({ message: "User updated", user: updatedUser?.value });
+        .json({ message: "User updated", user:{
+          isMembershipPaid,
+          hash: updatedUser?.value?.password
+        }});
       client?.close;
     } catch (error) {
       return res.status(422).json({ message: "User profile didn't updated" });

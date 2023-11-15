@@ -16,6 +16,7 @@
 
         &:hover {
             button {
+                background-color: rgba(0, 0, 0, 0.75);
                 svg {
                     opacity: 1;
                 }
@@ -61,7 +62,7 @@
             top: 0;
             bottom: 0;
             width: 30px;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0);
             border: none;
             border-radius: .25em;
             transition: background .5s;
@@ -75,7 +76,6 @@
             }
 
             &:hover {
-                background-color: rgba(0, 0, 0, 0.75);
 
                 svg {
                     color: white;

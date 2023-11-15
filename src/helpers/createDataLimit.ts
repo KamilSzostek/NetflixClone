@@ -1,7 +1,6 @@
 import { IMovie } from "./interfaces"
-export function createDataLimit(data: IMovie[]) {
-    const maxAmountCardsInSlider = 30
-    if (data.length > maxAmountCardsInSlider)
-       return data.slice(0, maxAmountCardsInSlider)
-    else return data
- }
+export function createDataLimit(data: IMovie[], limit = 20) {
+   if (data.length > limit)
+      return data.slice(0, limit)
+   else return data
+}

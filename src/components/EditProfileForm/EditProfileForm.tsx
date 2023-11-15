@@ -9,15 +9,18 @@ import { getActiveUser } from '@/helpers/getActiveUser';
 import DeleteProfile from '../DeleteProfile/DeleteProfile';
 
 import styles from './EditProfile.module.scss'
+import { useSession } from 'next-auth/react';
 
 interface IEditProfileFormProps {
-    closeEditHandler: () => void
+    profiles: IProfile[]
+    closeEditHandler: (newProfiles?: IProfile[]) => void
     profileData?: IProfile,
-    isKidsProfile?: boolean,
 }
 
-const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, profileData, closeEditHandler }) => {
+const EditProfileForm: FC<IEditProfileFormProps> = ({ profiles, profileData, closeEditHandler }) => {
+    const {data: session} = useSession()
     const nicknameMaxLength = 16
+    const isKidsProfile = profileData?.name === 'Kids'
 
     const [name, setName] = useState(profileData?.name || "")
     const [image, setImage] = useState<StaticImageData>(profileData?.image || Red)
@@ -25,17 +28,16 @@ const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, profileData
     const [selectedAgeGroup, setSelectedAgeGroup] = useState<IAgeGroup>(profileData?.ageGroup || {
         name: "",
     })
-    const [nameValidMessage, setNameValidMessage] = useState('')
+    const [nameValidMessage] = useState('')
     const [nickname, setNickName] = useState(profileData?.nickname || "")
-    const [nicknameValidMessage, setNickNameValidMessage] = useState('')
+    const [nicknameValidMessage] = useState('')
     const [autoplayEpisode, setAutoplayEpisode] = useState(profileData?.autoNextEpisode)
     const [autoplayPreview, setAutoplayPreview] = useState(profileData?.autoPreview)
     const [showIconSelector, setShowIconSelector] = useState(false)
     const [editAgeGroup, setEditAgeGroup] = useState(false)
     const [showDeleteProfile, setShowDeleteProfile] = useState(false)
 
-
-    const nameHandler = (e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value);
+    const nameHandler = (e: React.ChangeEvent<HTMLInputElement>) => !isKidsProfile && setName(e.target.value);
     const nicknameHandler = (e: React.ChangeEvent<HTMLInputElement>) => nickname.length <= nicknameMaxLength && setNickName(e.target.value);
 
     useEffect(() => {
@@ -53,7 +55,6 @@ const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, profileData
 
     const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const activeUser = await getActiveUser()
         if(profileData){
             const updatedProfile: IProfile = {
                 _id: profileData._id,
@@ -67,7 +68,7 @@ const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, profileData
                 isMainProfile: profileData.isMainProfile
             }
     
-            const updatedProfiles = activeUser.profiles.map((profile: IProfile) => {
+            const updatedProfiles = profiles.map((profile: IProfile) => {
                 if (profile._id === profileData._id)
                     return updatedProfile
                 else
@@ -75,7 +76,7 @@ const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, profileData
             })
     
             const updatedUser = {
-                email: activeUser.email,
+                email: session?.user?.email,
                 profiles: updatedProfiles
             }
             try{
@@ -87,18 +88,17 @@ const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, profileData
                     body: JSON.stringify(updatedUser)
                 })
                 if(res.status === 202)
-                    closeEditHandler()
+                    closeEditHandler(updatedProfiles)
             }
             catch(err) {console.log(err)}
         }
     }
 
     const deleteProfileHandler = async () => {
-        const activeUser = await getActiveUser()
         if(profileData){
-            const updatedProfiles = activeUser.profiles.filter((profile: IProfile) => profile._id !== profileData?._id)
+            const updatedProfiles = profiles.filter((profile: IProfile) => profile._id !== profileData?._id)
             const updatedUser = {
-                email: activeUser.email,
+                email: session?.user?.email,
                 profiles: updatedProfiles
             }
             try{
@@ -110,7 +110,7 @@ const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, profileData
                     body: JSON.stringify(updatedUser)
                 })
                 if(res.status === 202)
-                    closeEditHandler()
+                    closeEditHandler(updatedProfiles)
             }
             catch(err) {console.log(err)}
         }
@@ -168,13 +168,13 @@ const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, profileData
                                 </div>
                             </fieldset>}
                     </section>
-                    <section>
+                    <section className={styles.ageGroupSelector}>
                         <h4>Age group preferences</h4>
                         <div>
                             <span>{selectedAgeGroup.title}</span>
                             <p>{selectedAgeGroup.description}</p>
                         </div>
-                        {editAgeGroup ? <section className={styles.ageGroupSelector}>{ageGroupElement} <button type='button' onClick={() => setEditAgeGroup(false)}>Save</button></section> : <button type='button' onClick={() => setEditAgeGroup(true)}>Edit</button>}
+                        {editAgeGroup ? <section >{ageGroupElement} <button type='button' onClick={() => setEditAgeGroup(false)}>Save</button></section> : !isKidsProfile && <button type='button' onClick={() => setEditAgeGroup(true)}>Edit</button>}
                     </section>
                     <section>
                         <h4>Autoplay settings</h4>
@@ -191,8 +191,8 @@ const EditProfileForm: FC<IEditProfileFormProps> = ({ isKidsProfile, profileData
             </div>
             <div>
                 <button type='submit'>Save</button>
-                <button type='button' onClick={closeEditHandler}>Cancel</button>
-                {!profileData?.isMainProfile && <button type='button' onClick={() => setShowDeleteProfile(true)}>Delete profile</button>}
+                <button type='button' onClick={()=>closeEditHandler()}>Cancel</button>
+                {!profileData?.isMainProfile && !isKidsProfile && <button type='button' onClick={() => setShowDeleteProfile(true)}>Delete profile</button>}
             </div>
         </form>
     );

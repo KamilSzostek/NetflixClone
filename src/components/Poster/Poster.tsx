@@ -16,6 +16,7 @@ interface IPosterProps {
 const Poster: FC<IPosterProps> = ({ movie }) => {
     const router = useRouter()
     const isSearchResult = router.asPath.includes('search')
+    const isNotify = router.asPath.includes("notifi")
 
     const [showInfo, setShowInfo] = useState(false)
     const [showDescription, setShowDescription] = useState(isSearchResult ? true : false)
@@ -47,7 +48,7 @@ const Poster: FC<IPosterProps> = ({ movie }) => {
                         <button><FontAwesomeIcon icon={faPlay} /></button>
                         {!isSearchResult && <>
                             <AddFavButton />
-                            <AddLikeButton />
+                            {!isNotify && <AddLikeButton />}
                             <button className={showDescription ? styles.selected : ''} onClick={() => setShowDescription(!showDescription)}><FontAwesomeIcon icon={faChevronDown} /></button>
                         </>}
                     </div>

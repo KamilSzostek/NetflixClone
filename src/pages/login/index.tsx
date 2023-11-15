@@ -21,7 +21,7 @@ const Login: FC = () => {
                 <BaseButton text='sign in' linkPath='/login' />
             </NavBar>
             <main>
-                <SignInForm />
+                <SignInForm/>
             </main>
             <ShortFooter />
         </div>

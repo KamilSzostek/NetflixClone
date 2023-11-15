@@ -1,41 +1,44 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoClient } from "mongodb";
+import { decrypt } from "@/helpers/dataEncryption";
 
-export const options: NextAuthOptions = {
+export const authOptions = {
+  session:{
+    maxAge: 7*24*60*60
+  },
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        let client;
-        try {
-          client = await MongoClient.connect(process.env.MONGODB_URL!);
-          const db = client.db();
-          const user = await db.collection("NetflixUsers").findOne({
-            email: credentials?.email,
-            password: credentials?.password,
+        if (credentials) {
+          const client = await MongoClient.connect(
+            `${process.env.MONGODB_CONNECTION_STRING}`
+          );
+          const users = client?.db().collection("NetflixUsers");
+          const result = await users.findOne({
+            email: credentials.email,
+            isActive: true
           });
-          if (user) return user.email;
-          else return null;
-        } catch (err) {
-          console.error("Błąd autentykacji:", err);
-          throw new Error("Błąd autentykacji");
-        } finally {
-          client?.close();
-        }
+          if (!result) {
+            client.close();
+            throw new Error("No user found with that email");
+          }
+          if (decrypt(result.password) !== credentials.password) {
+            client.close();
+            throw new Error("Password doesn't match.");
+          }
+          client.close();
+          return { id: result._id.toString(), email: result.email, name:'', image:''};
+        } else 
+        return null
       },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
-  pages: {
-    signIn: "/login",
-  },
-};
+}
 
-const handler = NextAuth(options);
-
-export { handler as GET, handler as POST };
+export default NextAuth(authOptions);

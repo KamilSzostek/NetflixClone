@@ -1,4 +1,4 @@
-import { FC, useLayoutEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
@@ -16,15 +16,15 @@ import ChoosenPackage from '@/components/ChoosenPackage/ChoosenPackage';
 import { checkValidity } from '@/helpers/validationFunctions';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import { useSelector } from 'react-redux';
-import { planSelector, priceSelector } from '@/store/typePlan';
+import { planPriceSelector } from '@/store/plan';
 import { useRouter } from 'next/router';
 
 import styles from '../../../styles/SignUp.module.scss'
+import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 const CreditOption: FC = () => {
     const router = useRouter()
-    const plan = useSelector(planSelector)
-    const price = useSelector(priceSelector)
+    const price = useSelector(planPriceSelector)
 
     const [cardNumber, setCardNumber] = useState('')
     const [cardNumberMessage, setCardNumberMessage] = useState('')
@@ -38,17 +38,6 @@ const CreditOption: FC = () => {
     const [lastNameMessage, setLastNameMessage] = useState('')
     const onlyDigitsReg = new RegExp('[0-9]')
     const onlyLettersReg = new RegExp('[A-z]')
-
-    useLayoutEffect(() => {
-        const newAccountToAdd = sessionStorage.getItem('newMember')
-        if (newAccountToAdd === undefined)
-            router.push('/signup')
-        if (plan.price === '')
-            router.push('/signup/planform')
-    }, [])
-
-    const inputsArr = [cardNumber, expirationDate, firstName, lastName, CVV]
-    const errorMessagesArr = [cardNumberMessage, expirationDateMessage, CVVMessage, firstNameMessage, lastNameMessage]
 
     //Function control card number field, which can contain only 16 digits separeted by space after every four digits
     const cardNumberHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +101,6 @@ const CreditOption: FC = () => {
         if (validationResultsArr.every(result => result)) {
             const newUser = {
                 email: sessionStorage.getItem('newMember'),
-                plan,
                 creditCard: {
                     firstName,
                     lastName,
@@ -131,62 +119,60 @@ const CreditOption: FC = () => {
             }).then(res => res.json()).then(data => {
                 data.user.isMembershipPaid ? router.push('/signup/configureAccount') : alert('Payment not done.')
             }).catch(err => console.error(err))
-            
+
         }
     }
-    if (plan.price !== '') {
-        return (
-            <SignUpLayout>
-                <SignUpSection width='medium' showSection={true}>
-                    <>
-                        <StepCounter currentStep={3} totalStepInteger={3} />
-                        <h2>Set up your credit or debit card</h2>
-                        <div className={styles.images}>
-                            <Image src={Visa} alt='visa' width={50} height={30} />
-                            <Image src={Master} alt='master' width={50} height={30} />
-                            <Image src={American} alt='master' width={50} height={30} />
-                        </div>
-                        <form className={formStyles.form} onSubmit={submitHandler}>
-                            <FieldWithValidation message={cardNumberMessage}>
-                                <CustomInput placeholder='Card number' inputValue={cardNumber} changeHandler={cardNumberHandler} keyDownHandler={cardNumberKeyHandler} isLight>
-                                    <FontAwesomeIcon icon={faCreditCard} />
+    if (useShowPageSignup()) return (
+        <SignUpLayout>
+            <SignUpSection width='medium' showSection={true}>
+                <>
+                    <StepCounter currentStep={3} totalStepInteger={3} />
+                    <h2>Set up your credit or debit card</h2>
+                    <div className={styles.images}>
+                        <Image src={Visa} alt='visa' width={50} height={30} />
+                        <Image src={Master} alt='master' width={50} height={30} />
+                        <Image src={American} alt='master' width={50} height={30} />
+                    </div>
+                    <form className={formStyles.form} onSubmit={submitHandler}>
+                        <FieldWithValidation message={cardNumberMessage}>
+                            <CustomInput placeholder='Card number' inputValue={cardNumber} changeHandler={cardNumberHandler} keyDownHandler={cardNumberKeyHandler} isLight>
+                                <FontAwesomeIcon icon={faCreditCard} />
+                            </CustomInput>
+                        </FieldWithValidation>
+                        <div className={formStyles.container}>
+                            <FieldWithValidation message={expirationDateMessage}>
+                                <CustomInput placeholder='Expiration date' inputValue={expirationDate} changeHandler={expirationDateHandler} keyDownHandler={expirationDateKeyHandler} isLight>
+                                    <FontAwesomeIcon icon={faCalendarAlt} />
                                 </CustomInput>
                             </FieldWithValidation>
-                            <div className={formStyles.container}>
-                                <FieldWithValidation message={expirationDateMessage}>
-                                    <CustomInput placeholder='Expiration date' inputValue={expirationDate} changeHandler={expirationDateHandler} keyDownHandler={expirationDateKeyHandler} isLight>
-                                        <FontAwesomeIcon icon={faCalendarAlt} />
-                                    </CustomInput>
-                                </FieldWithValidation>
-                                <FieldWithValidation message={CVVMessage}>
-                                    <CustomInput placeholder='CVV' inputValue={CVV} changeHandler={CVVHandler} isLight>
-                                        <FontAwesomeIcon icon={faQuestionCircle} />
-                                    </CustomInput>
-                                </FieldWithValidation>
-                            </div>
-                            <FieldWithValidation message={firstNameMessage} >
-                                <CustomInput placeholder='First Name' inputValue={firstName} changeHandler={firstNameHandler} isLight />
+                            <FieldWithValidation message={CVVMessage}>
+                                <CustomInput placeholder='CVV' inputValue={CVV} changeHandler={CVVHandler} isLight>
+                                    <FontAwesomeIcon icon={faQuestionCircle} />
+                                </CustomInput>
                             </FieldWithValidation>
-                            <FieldWithValidation message={lastNameMessage}>
-                                <CustomInput placeholder='Last Name' inputValue={lastName} changeHandler={lastNameHandler} isLight />
-                            </FieldWithValidation>
-                            <ChoosenPackage>
-                                <p>
-                                    By clicking the "Start Paid Membership" button below, you agree to our
-                                    <Link href=''> Terms of Use</Link> and that you are over 18 and acknowledge the
-                                    <Link href=''> Privacy Statement</Link>.
-                                    Netflix will automatically continue your membership and charge the membership fee
-                                    (currently €{price}/month) to your payment method until you cancel.
-                                    You may cancel at any time to avoid future charges.
-                                </p>
-                            </ChoosenPackage>
-                            <BaseButton text='Start Paid Membership' />
-                        </form>
-                    </>
-                </SignUpSection>
-            </SignUpLayout>
-        );
-    }
+                        </div>
+                        <FieldWithValidation message={firstNameMessage} >
+                            <CustomInput placeholder='First Name' inputValue={firstName} changeHandler={firstNameHandler} isLight />
+                        </FieldWithValidation>
+                        <FieldWithValidation message={lastNameMessage}>
+                            <CustomInput placeholder='Last Name' inputValue={lastName} changeHandler={lastNameHandler} isLight />
+                        </FieldWithValidation>
+                        <ChoosenPackage>
+                            <p>
+                                By clicking the "Start Paid Membership" button below, you agree to our
+                                <Link href=''> Terms of Use</Link> and that you are over 18 and acknowledge the
+                                <Link href=''> Privacy Statement</Link>.
+                                Netflix will automatically continue your membership and charge the membership fee
+                                (currently €{price}/month) to your payment method until you cancel.
+                                You may cancel at any time to avoid future charges.
+                            </p>
+                        </ChoosenPackage>
+                        <BaseButton text='Start Paid Membership' />
+                    </form>
+                </>
+            </SignUpSection>
+        </SignUpLayout>
+    );
 };
 
 export default CreditOption;

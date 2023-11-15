@@ -10,13 +10,14 @@ import { footerLinkArr2 } from '@/helpers/footerLinkLists';
 import DefaultIcon from '../../../../../public/assets/profiles/default.png'
 import { IProfile, ILanguage } from '@/helpers/interfaces';
 import LanguageSelector from '@/components/LanguageSelector/LanguageSelector';
-import { useConfigureAccountNavGuard } from '@/hooks/useConfigureAccountNavGuard';
-import { setCookie } from '@/helpers/cookies';
 import { ageGroups } from '@/helpers/ageGroup';
 import KidsIcon from '../../../../../public/assets/profiles/kids.png'
+import { signIn } from 'next-auth/react';
 
 import styles from '../../../../styles/configureAccount.module.scss'
 import stylesProfiles from '../../../../styles/ConfigureProfiles.module.scss'
+import { decrypt } from '@/helpers/dataEncryption';
+import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 
 const ConfigureProfiles: FC = () => {
@@ -33,8 +34,6 @@ const ConfigureProfiles: FC = () => {
     const [selectedLanguages, setSelectedLanguages] = useState<ILanguage[]>([])
 
     const profilesSectionRef = useRef<HTMLElement>(null)
-
-    useConfigureAccountNavGuard()
 
     const selectedLanguageHandler = (langArr: ILanguage[]) => setSelectedLanguages(langArr)
 
@@ -123,9 +122,18 @@ const ConfigureProfiles: FC = () => {
                 })
                 const answer = await res.json()
                 if (answer.message === 'User updated') {
-                    setCookie('ActiveUserId', answer.user._id, 7)
-                    sessionStorage.removeItem('newMember')
-                    router.push('/browse')
+                    console.log(answer.hash);
+                    decrypt('1234567')
+                    const status = await signIn('credentials', {
+                        redirect: false,
+                        email: email,
+                        password: ''
+                    });
+                    console.log(status?.ok);
+                    if(status?.ok){
+                        sessionStorage.removeItem('newMember')
+                        router.push('/browse')
+                    }
                 }
             }
             catch (err) { console.log(err) }
@@ -170,7 +178,7 @@ const ConfigureProfiles: FC = () => {
     }
 
 
-    return (
+    if (useShowPageSignup()) return (
         <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
             <SignUpSection showSection={showFirstStep} width='large' isTextLeftAllign>
                 <div className={styles.container}>

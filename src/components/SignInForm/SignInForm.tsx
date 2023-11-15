@@ -1,31 +1,38 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import CustomInput from '../ui/CustomInput/CustomInput';
 import BaseButton from '../ui/BaseButton/BaseButton';
 import FieldWithValidation from '../FieldWithValidation/FieldWithValidation';
 import DialingSelect from '../DialingSelect/DialingSelect';
-import { setCookie } from '@/helpers/cookies';
-import Loader from '../Loader/Loader';
-import { useDispatch } from 'react-redux';
-import { changeIsLogged } from '@/store/isLogged';
+import { signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 import styles from './SignInForm.module.scss'
 
 const SignInForm: FC = () => {
+    const {data: session, status} = useSession()
     const router = useRouter()
-    const dispatch = useDispatch()
 
-    const [email, setEmail] = useState('')
+    const [email, setEmail] = useState(router.query.email as string || '')
     const [password, setPassword] = useState('')
     const [isRememberMe, setIsRememberMe] = useState(false)
     const [showPhoneSelect, setShowPhoneSelect] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [loginValidMessage, setLoginValidMessage] = useState('')
     const [passwordValidMessage, setPasswordValidMessage] = useState('')
-    const [showLoading, setShowLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const [showInfo, setShowInfo] = useState(false)
+
+    const formRef = useRef<HTMLFormElement>(null)
+
+    useEffect(() => {
+        if (sessionStorage.getItem('newMember')) {
+            router.query.activeAccount === '' && setEmail(sessionStorage.getItem('newMember')!)
+            sessionStorage.removeItem('newMember')
+            formRef.current?.querySelector('input')?.focus()
+        }
+    }, [])
 
     const loginChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const login = e.currentTarget.value
@@ -56,37 +63,31 @@ const SignInForm: FC = () => {
         }
     }
 
-    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setShowLoading(true)
         const credentials = {
             email,
             password
         }
-        fetch('/api/auth', {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(credentials)
-        }).then(res => res.json()).then(data => {
-            if (data.message === 'Wrong credentials') {
-                setEmail('')
-                setPassword('')
-                setLoginValidMessage('')
-                setPasswordValidMessage('')
-                setErrorMessage(data.message + ". Please try again.")
-            }
-            else {
-                dispatch(changeIsLogged(true))
-                setCookie('ActiveUserId', data.user._id, 7)
-                router.push('/browse')
-            }
-        }).catch(err => console.log(err)).finally(() => setShowLoading(false))
+        const status = await signIn('credentials', {
+            redirect: false,
+            email: credentials.email,
+            password: credentials.password,
+        });
+        if (status?.ok) {
+            router.push('/browse')
+        }
+        else {
+            setPassword('')
+            setLoginValidMessage('')
+            setPasswordValidMessage('')
+            status?.error && setErrorMessage(status.error + ". Please try again.")
+        }
     }
 
     return (
-        <form className={styles.form} onSubmit={submitHandler}>
+        <form ref={formRef} className={styles.form} onSubmit={submitHandler}>
+            {router.query.activeAccount === '' && <p className={styles.message}>Account with that email address already exist. Try to sign in.</p>}
             <h2>sign in</h2>
             {errorMessage !== '' && <p className={styles.error}>{errorMessage}</p>}
             <FieldWithValidation message={loginValidMessage}>
@@ -110,7 +111,6 @@ const SignInForm: FC = () => {
                 <p>This page is protected by Google reCAPTCHA to ensure you're not a bot.{!showInfo && <span onClick={() => setShowInfo(true)}>Learn more.</span>}</p>
                 {showInfo && <p>The information collected by Google reCAPTCHA is subject to the Google <Link href='https://policies.google.com/privacy'>Privacy Policy</Link> and <Link href='https://policies.google.com/terms'>Terms of Service</Link>, and is used for providing, maintaining, and improving the reCAPTCHA service and for general security purposes (it is not used for personalized advertising by Google).</p>}
             </div>
-            {showLoading && <Loader />}
         </form>);
 };
 

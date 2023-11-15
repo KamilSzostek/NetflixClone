@@ -15,6 +15,7 @@ const ProfileIcone: FC<IProfileIconeProps> = ({ name, image, isEditMode, clickHa
     function instanceOfStaticImageData(image: any): image is StaticImageData {
         return 'src' in image;
     }
+
     return (
         <figure className={styles.profile} onClick={clickHandler}>
             <div className={isEditMode ? styles.edit : ''}>

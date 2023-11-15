@@ -25,7 +25,7 @@ const SearchBar: FC = () => {
     }
     return (
         <form ref={containerRef} className={styles.searchBar} onClick={clickHandler} onSubmit={submitHandler}>
-            <span onClick={()=>console.log('click')}>
+            <span onClick={()=>inputRef.current?.value !== '' && router.push(`/browse/search/${inputRef.current?.value}`)}>
                 <FontAwesomeIcon icon={faSearch} />
             </span>
             <input ref={inputRef} type="search" placeholder='Titles, people, genres' onBlur={blurHandler} />

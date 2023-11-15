@@ -1,5 +1,4 @@
-import { FC, useLayoutEffect } from 'react';
-import { useRouter } from 'next/router';
+import { FC } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
@@ -13,56 +12,43 @@ import American from '../../../../public/assets/AMEX.png'
 import Play from '../../../../public/assets/PLAYPL.png'
 import Netflix from '../../../../public/assets/netflix.png'
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
-import { useSelector } from 'react-redux';
-import { planSelector } from '@/store/typePlan';
-import { initialSelectedPlan } from '../planform';
+import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 import divStyles from '../../../styles/PaymentPicker.module.scss'
 
 const PaymentPicker: FC = () => {
-    const router = useRouter()
-    const plan = useSelector(planSelector)
-
-    useLayoutEffect(() => {
-        const newAccountToAdd = sessionStorage.getItem('newMember')
-        if (newAccountToAdd === undefined)
-            router.push('/signup')
-        else if (plan._id === '')
-            router.push('/signup/planform')
-    })
-    if (plan._id !== '')
-        return (
-            <SignUpLayout>
-                <SignUpSection width='medium' showSection={true}>
-                    <>
-                        <Image src={Lock} alt='Lock' width={50} height={50} />
-                        <StepCounter currentStep={3} totalStepInteger={3} />
-                        <h2>Choose how to pay</h2>
-                        <h3>Your payment is encrypted and you can change how you pay anytime.</h3>
-                        <h3><b>Secure for peace of mind.<br />Cancel easily online.</b></h3>
-                        <div className={divStyles.paymentselect}>
-                            <Link href='/signup/creditoption'>
-                                <span>Credit or debit card </span>
-                                <Image src={Visa} alt='visa' width={35} height={25} />
-                                <Image src={Master} alt='master card' width={35} height={25} />
-                                <Image src={American} alt='american express' width={35} height={25} />
-                                <FontAwesomeIcon icon={faChevronRight} />
-                            </Link>
-                            <Link href='/signup/dcboption'>
-                                <span>Add to mobile bill</span>
-                                <Image src={Play} alt='play' width={35} height={25} />
-                                <FontAwesomeIcon icon={faChevronRight} />
-                            </Link>
-                            <Link href='/signup/giftoption'>
-                                <span>Gift Code</span>
-                                <Image src={Netflix} alt='gift code' width={35} height={25} />
-                                <FontAwesomeIcon icon={faChevronRight} />
-                            </Link>
-                        </div>
-                    </>
-                </SignUpSection>
-            </SignUpLayout>
-        );
+    if (useShowPageSignup()) return (
+        <SignUpLayout>
+            <SignUpSection width='medium' showSection={true}>
+                <>
+                    <Image src={Lock} alt='Lock' width={50} height={50} />
+                    <StepCounter currentStep={3} totalStepInteger={3} />
+                    <h2>Choose how to pay</h2>
+                    <h3>Your payment is encrypted and you can change how you pay anytime.</h3>
+                    <h3><b>Secure for peace of mind.<br />Cancel easily online.</b></h3>
+                    <div className={divStyles.paymentselect}>
+                        <Link href='/signup/creditoption'>
+                            <span>Credit or debit card </span>
+                            <Image src={Visa} alt='visa' width={35} height={25} />
+                            <Image src={Master} alt='master card' width={35} height={25} />
+                            <Image src={American} alt='american express' width={35} height={25} />
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </Link>
+                        <Link href='/signup/dcboption'>
+                            <span>Add to mobile bill</span>
+                            <Image src={Play} alt='play' width={35} height={25} />
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </Link>
+                        <Link href='/signup/giftoption'>
+                            <span>Gift Code</span>
+                            <Image src={Netflix} alt='gift code' width={35} height={25} />
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </Link>
+                    </div>
+                </>
+            </SignUpSection>
+        </SignUpLayout>
+    );
 };
 
 export default PaymentPicker;

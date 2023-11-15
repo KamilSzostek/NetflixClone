@@ -1,20 +1,22 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import StepCounter from '@/components/StepCounter/StepCounter';
 import Footer from '@/components/Footer/Footer';
 import BaseButton from '@/components/ui/BaseButton/BaseButton';
 import { footerLinkArr2 } from '@/helpers/footerLinkLists';
-import { useConfigureAccountNavGuard } from '@/hooks/useConfigureAccountNavGuard';
 
 import styles from '../../../styles/configureAccount.module.scss'
+import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 const ConfigureAccount: FC = () => {
     const [email, setEmail] = useState('')
-    const emailHandler = (email: string) => setEmail(email)
+    useEffect(() => {
+        const email = sessionStorage.getItem('newMember')
+        email && setEmail(email)
+    }, [])
 
-    useConfigureAccountNavGuard(emailHandler)
-    return (
+    if (useShowPageSignup()) return (
         <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
             <SignUpSection showSection={true} width='small' isTextLeftAllign>
                 <>

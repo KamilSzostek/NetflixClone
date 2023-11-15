@@ -1,9 +1,7 @@
-import { FC, useLayoutEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import { planSelector, selectPlan } from '@/store/typePlan';
 import Footer from '@/components/Footer/Footer';
 import CheckList from '@/components/CheckList/CheckList';
 import PlanTable from '@/components/PlanTable/MembershipPlan';
@@ -14,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import Check from '../../../../public/assets/Checkmark.png'
+import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 import styles from '../../../components/ui/SignUpLayout/SignUpLayout.module.scss'
 
@@ -39,32 +38,35 @@ export const initialSelectedPlan = {
 }
 
 const PlanForm: FC = () => {
-    const dispatch = useDispatch()
     const router = useRouter()
-    const plan = useSelector(planSelector)
 
-    const [selectedPlan, setSelectedPlan] = useState(plan)
+    const [selectedPlan, setSelectedPlan] = useState(initialSelectedPlan)
     const [showFirstSection, setShowFirstSection] = useState(selectedPlan._id === initialSelectedPlan._id ? true : false)
     const [showSecondSection, setShowSecondSection] = useState(selectedPlan._id === initialSelectedPlan._id ? false : true)
     const selectPlanHandler = (plan: IPlan) => setSelectedPlan(plan)
 
     const clickHandler = () => {
-        const newAccountToAdd = sessionStorage?.getItem('newMember')
-        if (newAccountToAdd) {
+        const email = sessionStorage?.getItem('newMember')
+        if (email) {
             if (selectedPlan === initialSelectedPlan)
                 alert('Select any plan')
             else {
-                dispatch(selectPlan(selectedPlan))
+                fetch('/api/users', {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        email,
+                        plan: selectedPlan
+                    })
+                }).then(res => res.json()).then(data => console.log(data))
                 router.push('/signup/paymentPicker')
             }
         }
-        else{
-            dispatch(selectPlan(selectedPlan))
-            router.push('/signup')
-        }
     }
 
-    return (
+    if (useShowPageSignup()) return (
         <SignUpLayout children2={<Footer linkList={linkArr} lightBg />}>
             <SignUpSection width='small' showSection={showFirstSection}>
                 <>
@@ -72,7 +74,7 @@ const PlanForm: FC = () => {
                     <StepCounter currentStep={2} totalStepInteger={3} />
                     <h2>Choose your plan</h2>
                     <CheckList content={preplanArr} />
-                    <BaseButton text='Next' onClick={()=> {setShowFirstSection(false); setShowSecondSection(true)}} />
+                    <BaseButton text='Next' onClick={() => { setShowFirstSection(false); setShowSecondSection(true) }} />
                 </>
             </SignUpSection>
             <SignUpSection width='medium' showSection={showSecondSection} isTextLeftAllign>

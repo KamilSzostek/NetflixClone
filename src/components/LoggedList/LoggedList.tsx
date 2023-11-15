@@ -27,7 +27,7 @@ const LoggedList: FC = () => {
     </ul>)
   return (
     <>
-      <ExpandedList children2={listElement} isMobileOnly>
+      <ExpandedList children2={listElement} isMobileOnly isLeftPos>
         <>
           <span>Browse</span>
           <FontAwesomeIcon icon={faChevronCircleDown} />

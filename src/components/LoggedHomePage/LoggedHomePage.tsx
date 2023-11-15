@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import MoviesCarousele from '../MoviesCarousele/MoviesCarousele';
 import NavBar from '../NavBar/NavBar';
@@ -9,23 +9,40 @@ import Footer from '../Footer/Footer';
 import { footerLinkArr2 } from '@/helpers/footerLinkLists';
 import Openning from '../Openning/Openning';
 import Poster from '../Poster/Poster';
+import { adultContentSelector } from '@/store/selectedProfile';
 
 import styles from './LoggedHomePage.module.scss';
+import { useSelector } from 'react-redux';
 
 interface ILoggedHomePageProps {
-  moviesData: ICollection[]
+  moviesData: ICollection[] 
   searchPhrase?: string
 }
 
 const LoggedHomePage: FC<ILoggedHomePageProps> = ({ searchPhrase, moviesData }) => {
   const router = useRouter()
-  const collections = moviesData.map((collection, key) => (<MoviesCarousele key={key} title={collection.title} movies={collection.movies} />))
+  const adultContentAvalible = useSelector(adultContentSelector)
 
-  const searchResults = moviesData[0].movies.map(movie => <Poster movie={movie} />)
-  function createTop10() {
+  useEffect(() => {
+    if (!adultContentAvalible) {
+      for (const collection of moviesData) {
+        collection.movies.filter(movie => movie.adult)
+      }
+    }
+  }, [])
+
+  const collections = moviesData.length > 0 && moviesData.map((collection, key) => (<MoviesCarousele key={key} title={collection.title} movies={collection.movies} />))
+  const collection = moviesData.length === 1 && moviesData[0].movies.map((movie, key) => (
+    <div key={key}>
+      {moviesData[0].title === 'Notification' && <span className={styles.number}>{key + 1}</span>}
+      <Poster key={movie.id} movie={movie} />
+    </div>
+  ))
+
+  function createTop10(collection: IMovie[]) {
     const top10: IMovie[] = []
     for (let index = 0; index < 10; index++) {
-      const tmp = Object.create(moviesData[1].movies[index])
+      const tmp = Object.create(collection[index])
       top10.push(tmp);
       top10[index].index = index + 1
     }
@@ -40,17 +57,17 @@ const LoggedHomePage: FC<ILoggedHomePageProps> = ({ searchPhrase, moviesData }) 
             <LoggedMenu />
           </>
         </NavBar>
-        {router.asPath === '/browse' && <Openning top10={createTop10()} />}
+        {router.asPath === '/browse' && <Openning top10={createTop10(moviesData[1].movies)} />}
       </header >
       <main className={styles.main}>
-        {moviesData[0].title === 'Search'
-          ? (<>
-            <div className={styles.searchResults}>
-              {searchResults}
+        {
+          moviesData.length === 1 ? (<>
+            <div className={styles.results}>
+              {collection}
             </div>
-            <p className={styles.searchPhrase}><span>Search phrase: '{searchPhrase}'</span><span> Results: {moviesData[0].movies.length}</span></p>
+            {moviesData[0].title === 'Search' && <p className={styles.searchPhrase}><span>Search phrase: '{searchPhrase}'</span><span> Results: {moviesData[0].movies.length}</span></p>}
           </>)
-          : collections}
+            : collections}
       </main>
       <Footer linkList={footerLinkArr2} />
     </>

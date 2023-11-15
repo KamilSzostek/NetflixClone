@@ -15,4 +15,9 @@ export default async function handler(
       return res.status(421).json({ message: "Something, went wrong." });
     }
   }
+  if(req.method == "POST"){
+    const {icon} = req.body
+    await db?.collection('ProfileIcons').insertOne(icon)
+    return res.status(200).json(icon)
+  }
 }

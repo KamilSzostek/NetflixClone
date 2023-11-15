@@ -1,4 +1,4 @@
-import { FC, useLayoutEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
 import StepCounter from '@/components/StepCounter/StepCounter';
 import FieldWithValidation from '@/components/FieldWithValidation/FieldWithValidation';
@@ -8,25 +8,15 @@ import BaseButton from '@/components/ui/BaseButton/BaseButton';
 import { footerLinkArr2 } from '@/helpers/footerLinkLists';
 import Footer from '@/components/Footer/Footer';
 import { checkValidity } from '@/helpers/validationFunctions';
-import { useSelector } from 'react-redux';
-import { planSelector } from '@/store/typePlan';
 import { useRouter } from 'next/router';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
+import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 const GiftOption: FC = () => {
     const router = useRouter()
-    const plan = useSelector(planSelector)
     const [giftCode, setGiftCode] = useState('')
     const [validMessage, setValidMessage] = useState('')
     const validMessageHandler = (message: string) => setValidMessage(message)
-
-    useLayoutEffect(() => {
-        const newAccountToAdd = sessionStorage.getItem('newMember')
-        if (newAccountToAdd === undefined)
-            router.push('/signup')
-        if (plan.price === '')
-            router.push('/signup/planform')
-    }, [])
 
     const giftCodeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value
@@ -36,10 +26,9 @@ const GiftOption: FC = () => {
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if(checkValidity({ name: 'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length > 7, setMessage: validMessageHandler })){
+        if (checkValidity({ name: 'Gift Card Pin or Code', value: giftCode, validCondition: giftCode.length > 7, setMessage: validMessageHandler })) {
             const newUser = {
                 email: sessionStorage.getItem('newMember'),
-                plan,
                 isMembershipPaid: true
             }
             fetch('/api/users', {
@@ -55,24 +44,23 @@ const GiftOption: FC = () => {
         }
     }
 
-    if (plan.price !== '')
-        return (
-            <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
-                <SignUpSection width='medium' showSection={true} isTextLeftAllign>
-                    <>
-                        <StepCounter currentStep={3} totalStepInteger={3} />
-                        <h2>Enter your gift code</h2>
-                        <form onSubmit={submitHandler}>
-                            <FieldWithValidation message={validMessage}>
-                                <CustomInput placeholder='Gift Card Pin or Code' inputValue={giftCode} changeHandler={giftCodeHandler} isLight />
-                            </FieldWithValidation>
-                            <ChoosenPackage />
-                            <BaseButton text='Redeem Gift Code' />
-                        </form>
-                    </>
-                </SignUpSection>
-            </SignUpLayout>
-        );
+    if (useShowPageSignup()) return (
+        <SignUpLayout children2={<Footer linkList={footerLinkArr2} lightBg />}>
+            <SignUpSection width='medium' showSection={true} isTextLeftAllign>
+                <>
+                    <StepCounter currentStep={3} totalStepInteger={3} />
+                    <h2>Enter your gift code</h2>
+                    <form onSubmit={submitHandler}>
+                        <FieldWithValidation message={validMessage}>
+                            <CustomInput placeholder='Gift Card Pin or Code' inputValue={giftCode} changeHandler={giftCodeHandler} isLight />
+                        </FieldWithValidation>
+                        <ChoosenPackage />
+                        <BaseButton text='Redeem Gift Code' />
+                    </form>
+                </>
+            </SignUpSection>
+        </SignUpLayout>
+    );
 }
 
 export default GiftOption;

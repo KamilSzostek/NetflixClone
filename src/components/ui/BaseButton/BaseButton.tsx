@@ -4,7 +4,6 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Link from 'next/link';
 
 import styles from './BaseButton.module.scss'
-import { RefType } from 'mongoose';
 
 interface IBaseButtonProps {
   text: string,

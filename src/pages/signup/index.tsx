@@ -15,6 +15,7 @@ import { IUser } from '@/helpers/interfaces';
 import Link from 'next/link';
 
 import styles from '../../styles/SignUp.module.scss'
+import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 const SignUp: FC = () => {
     const router = useRouter()
@@ -75,7 +76,8 @@ const SignUp: FC = () => {
     const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const plan = initialSelectedPlan
-        if (emailValidation(email) && passwordValidation(password)) {//check email and password have correct format
+        if (emailValidation(email) && passwordValidation(password)) {
+
             const newUser = JSON.stringify({
                 email,
                 password,
@@ -94,10 +96,10 @@ const SignUp: FC = () => {
             })
             setPasswordValidMessage('')
             try {
-                const response = await fetch('/api/users') //get all users from database
+                const response = await fetch('/api/users')
                 const users: IUser[] = await response.json()
                 const user = isTypedEmailInDatabase(users)
-                if (user) {//if user with same email like from input field is in database update user password in database otherwise add new user
+                if (user) {
                     if (user.isActive) {
                         setAccountExisted(true)
                     }
@@ -128,12 +130,12 @@ const SignUp: FC = () => {
                 console.error(error);
             }
         }
-        else { //if email or password don't have correct format clear input fields and show warrning info
+        else {
             email === '' ? setEmaiValidMessage('Email is required.') : (emailValidation(email) ? setEmaiValidMessage('') : setEmaiValidMessage('Please enter a valid email address.'))
             password === '' ? setPasswordValidMessage('Password is required.') : (passwordValidation(password) ? setPasswordValidMessage('') : setPasswordValidMessage('Your password must contain between 4 and 60 characters.'))
         }
     }
-    return (
+    if (useShowPageSignup()) return (
         <SignUpLayout children2={<Footer linkList={linkArr} lightBg />}>
             <>
                 <SignUpSection width='small' showSection={showFirstSection} showSectionHandler={() => setShowFirstSection(!showFirstSection)}>

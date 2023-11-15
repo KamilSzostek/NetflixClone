@@ -15,15 +15,15 @@ export interface IProfile {
 export interface IUser {
   _id?: string;
   email: string;
-  password: string;
+  password?: string;
   plan: {
     name: string;
     quality: string;
     price: string;
     resolution: string;
   };
-  phoneNumber: string;
-  creditCard: {
+  phoneNumber?: string;
+  creditCard?: {
     firstName: string;
     lastName: string;
     cardNumber: string;
@@ -71,4 +71,9 @@ export interface IMovie {
 export interface ICollection{
   title: string
   movies: IMovie[]
+}
+
+export interface IQA{
+  question: string
+  answer: string
 }

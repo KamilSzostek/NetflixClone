@@ -43,6 +43,10 @@ body {
 ul{
   list-style: none;
 }
+h1,h2,h3{
+  caret-color: #24242400;
+  cursor: default;
+}
 h1 {
   font-size: clamp(2rem, 2.5rem + 2vw, 4rem);
   margin-bottom: .5em;
