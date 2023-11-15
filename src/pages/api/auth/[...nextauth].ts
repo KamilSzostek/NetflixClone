@@ -28,9 +28,9 @@ export const authOptions = {
             client.close();
             throw new Error("No user found with that email");
           }
-          if (decrypt(result.password) !== credentials.password) {
+          if (decrypt(result.password, `${process.env.CRYPTO_SECRET}`) !== credentials.password) {
             client.close();
-            throw new Error("Password doesn't match." + "db: "+decrypt(result.password)+"  credentials: "+ credentials.password);
+            throw new Error("Password doesn't match.");
           }
           client.close();
           return { id: result._id.toString(), email: result.email, name:'', image:''};

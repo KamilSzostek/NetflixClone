@@ -20,7 +20,6 @@ interface IHomeProps {
 
 const Home: FC<IHomeProps> = ({ qa, token }) => {
   const router = useRouter()
-
   const [showPage, setShowPage] = useState(false)
   useEffect(() => {
     token ? router.push('/browse') : setShowPage(true)

@@ -35,7 +35,7 @@ export default async function handler(
     }
   } else if (method === "POST") {
     try {
-      body.password = encrypt(password)
+      body.password = encrypt(password, `${process.env.CRYPTO_SECRET}`)
         await db!.collection("NetflixUsers").insertOne(body);
         res.status(201)
         .json({ message: "User updated", user:{
@@ -71,7 +71,7 @@ export default async function handler(
       if (password) {
         updatedUser = await db!
           .collection("NetflixUsers")
-          .findOneAndUpdate({ email: email }, { $set: { password: encrypt(password) } });
+          .findOneAndUpdate({ email: email }, { $set: { password: encrypt(password, `${process.env.CRYPTO_SECRET}`) } });
       }
       if (creditCard) {
         updatedUser = await db!
@@ -96,7 +96,7 @@ export default async function handler(
         .status(202)
         .json({ message: "User updated", user:{
           isMembershipPaid: updatedUser?.value?.isMembershipPaid,
-          hash: decrypt(hash)
+          hash
         }});
       client?.close;
     } catch (error) {

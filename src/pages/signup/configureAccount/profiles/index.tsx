@@ -1,5 +1,6 @@
 import { FC, useId, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import SignUpSection from '@/components/SignUpSection/SignUpSection';
 import StepCounter from '@/components/StepCounter/StepCounter';
@@ -19,7 +20,7 @@ import styles from '../../../../styles/configureAccount.module.scss'
 import stylesProfiles from '../../../../styles/ConfigureProfiles.module.scss'
 
 
-const ConfigureProfiles: FC = () => {
+const ConfigureProfiles: FC<{ secret: string }> = ({ secret }) => {
     const currentYear = new Date().getFullYear()
     const randomId = useId()
     const router = useRouter()
@@ -67,7 +68,7 @@ const ConfigureProfiles: FC = () => {
             setShowFirstStep(false)
             setShowSecondtStep(true)
         }
-        else{
+        else {
             setProfiles([])
             alert('Fill main profile name')
         }
@@ -90,7 +91,7 @@ const ConfigureProfiles: FC = () => {
                 profile.preferedLanguage = selectedLanguages
             }
             const kidsProfile = {
-                _id: randomId + "1",
+                _id: "kids",
                 name: "Kids",
                 image: KidsIcon,
                 nickname: '',
@@ -105,12 +106,13 @@ const ConfigureProfiles: FC = () => {
                 autoPreview: true,
                 isMainProfile: false
             }
-            !profiles.includes(kidsProfile) && profiles.push(kidsProfile)
+            !profiles.find(profile => profile._id === kidsProfile._id) && profiles.push(kidsProfile)
             const user = {
                 email,
                 profiles,
                 isActive: true
             }
+            console.log(user);
             try {
                 const res = await fetch('/api/users', {
                     headers: {
@@ -124,10 +126,10 @@ const ConfigureProfiles: FC = () => {
                     const status = await signIn('credentials', {
                         redirect: false,
                         email: email,
-                        password: answer.user.hash
+                        password: decrypt(answer.user.hash, secret)
                     })
                     console.log(status);
-                    if(status?.ok){
+                    if (status?.ok) {
                         sessionStorage.removeItem('newMember')
                         router.push('/browse')
                     }
@@ -256,3 +258,11 @@ const ConfigureProfiles: FC = () => {
 };
 
 export default ConfigureProfiles;
+
+export const getServerSideProps: GetServerSideProps<{secret: string}> = async () => {
+    return {
+        props: {
+            secret: `${process.env.CRYPTO_SECRET}`
+        }
+    }
+}
