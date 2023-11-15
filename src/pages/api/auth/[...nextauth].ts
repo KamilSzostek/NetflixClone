@@ -30,7 +30,7 @@ export const authOptions = {
           }
           if (decrypt(result.password) !== credentials.password) {
             client.close();
-            throw new Error("Password doesn't match.");
+            throw new Error("Password doesn't match." + "db: "+decrypt(result.password)+"  credentials: "+ credentials.password);
           }
           client.close();
           return { id: result._id.toString(), email: result.email, name:'', image:''};

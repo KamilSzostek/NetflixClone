@@ -13,11 +13,10 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector';
 import { ageGroups } from '@/helpers/ageGroup';
 import KidsIcon from '../../../../../public/assets/profiles/kids.png'
 import { signIn } from 'next-auth/react';
+import { decrypt } from '@/helpers/dataEncryption';
 
 import styles from '../../../../styles/configureAccount.module.scss'
 import stylesProfiles from '../../../../styles/ConfigureProfiles.module.scss'
-import { decrypt, encrypt } from '@/helpers/dataEncryption';
-import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 
 const ConfigureProfiles: FC = () => {
@@ -122,12 +121,12 @@ const ConfigureProfiles: FC = () => {
                 })
                 const answer = await res.json()
                 if (answer.message === 'User updated') {
-                    console.log(answer.user.hash);
                     const status = await signIn('credentials', {
                         redirect: false,
                         email: email,
-                        password: ''
+                        password: answer.user.hash
                     })
+                    console.log(status);
                     if(status?.ok){
                         sessionStorage.removeItem('newMember')
                         router.push('/browse')

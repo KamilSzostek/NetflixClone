@@ -16,7 +16,7 @@ import Link from 'next/link';
 import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 import styles from '../../styles/SignUp.module.scss'
-import { encrypt } from '@/helpers/dataEncryption';
+import { decrypt, encrypt } from '@/helpers/dataEncryption';
 
 const SignUp: FC = () => {
     const router = useRouter()
@@ -86,7 +86,7 @@ const SignUp: FC = () => {
                 const response = await fetch(`/api/users/${email}`)
                 const user: IUser = await response.json()
                 user.isActive && setAccountExisted(true)
-                if (user) {
+                if (response.ok) {
                     if (user.isActive) {
                         setAccountExisted(true)
                     }
@@ -112,10 +112,8 @@ const SignUp: FC = () => {
                         method: 'POST',
                         body: newUser
                     }).then(res => res.json()).then((data) => {
-                        console.log(encrypt(password));
-                        console.log(data.user.hash);
                         sessionStorage.setItem('newMember', email)
-                        // router.push('/signup/planform')
+                        router.push('/signup/planform')
                     }).catch(err => console.error(err))
                 }
             }

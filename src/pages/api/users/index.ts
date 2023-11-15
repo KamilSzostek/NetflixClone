@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { connectDataBase } from "@/helpers/dbConnection";
-import { encrypt } from "@/helpers/dataEncryption";
+import { decrypt, encrypt } from "@/helpers/dataEncryption";
 
 export default async function handler(
   req: NextApiRequest,
@@ -35,9 +35,12 @@ export default async function handler(
     }
   } else if (method === "POST") {
     try {
-      body.password = encrypt(body.password)
+      body.password = encrypt(password)
         await db!.collection("NetflixUsers").insertOne(body);
-        return res.status(201).json({ message: "User added", user: req.body });
+        res.status(201)
+        .json({ message: "User updated", user:{
+          isMembershipPaid: body.isMembershipPaid,
+        }})
     } catch (error) {
       return res.status(422).json({ message: "Something went wrong"});
     }
@@ -88,11 +91,12 @@ export default async function handler(
           .collection("NetflixUsers")
           .findOneAndUpdate({ email: email }, { $set: { isActive: isActive } });
       }
+      const hash: string = updatedUser?.value?.password
       res
         .status(202)
         .json({ message: "User updated", user:{
           isMembershipPaid: updatedUser?.value?.isMembershipPaid,
-          hash: updatedUser?.value?.password
+          hash: decrypt(hash)
         }});
       client?.close;
     } catch (error) {
