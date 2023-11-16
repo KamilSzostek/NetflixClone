@@ -13,7 +13,6 @@ import Popular from '../../../public/assets/notification/tophits.jpg'
 import Old from '../../../public/assets/notification/oldgold.jpg'
 import Cinema from '../../../public/assets/notification/lastcinema.jpg'
 import Horror from '../../../public/assets/notification/horrorfans.jpg'
-import { eraseCookie } from '@/helpers/cookies';
 
 import styles from './LoggedMenu.module.scss'
 import { signOut } from 'next-auth/react';
@@ -22,7 +21,6 @@ const LoggedMenu: FC = () => {
   const dispatch = useDispatch()
   const profileName = useSelector(profileNameSelector)
   const profileIcon = useSelector(profileIconSelector)
-  const isProfileSelected = useSelector(isProfileSelector)
 
   const router = useRouter()
 

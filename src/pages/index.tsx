@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Header from '@/components/Header/Header'
@@ -20,12 +19,10 @@ interface IHomeProps {
 
 const Home: FC<IHomeProps> = ({ qa, token }) => {
   const router = useRouter()
-  const [showPage, setShowPage] = useState(false)
-  useEffect(() => {
-    token ? router.push('/browse') : setShowPage(true)
-  }, [])
-
-  if (showPage)
+  console.log(token);
+  if (token)
+    router.replace('/browse')
+  else
     return (
       <>
         <Head>
@@ -45,12 +42,12 @@ export default Home
 
 export const getServerSideProps: GetServerSideProps<IHomeProps> = async (context) => {
   const db = await getCollectionDB('QA')
-  const qa = await db.collection.find().toArray() 
+  const qa = await db.collection.find().toArray()
   const token = await getServerSession(
     context.req,
     context.res,
     authOptions
- )
+  )
   return {
     props: {
       qa: qa.map(element => ({

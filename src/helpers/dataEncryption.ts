@@ -6,6 +6,6 @@ export const encrypt = (clear: string, secret: string) => {
 
 export const decrypt = (cipher: string, secret:string) => {
   const decipher = CryptoJS.AES.decrypt(cipher, secret);
-  const result = decipher.toString()
+  const result = decipher.toString(CryptoJS.enc.Utf8)
   return result
 };
