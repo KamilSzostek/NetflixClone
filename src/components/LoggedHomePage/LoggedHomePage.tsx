@@ -10,13 +10,13 @@ import { footerLinkArr2 } from '@/helpers/footerLinkLists';
 import Openning from '../Openning/Openning';
 import Poster from '../Poster/Poster';
 import { adultContentSelector } from '@/store/selectedProfile';
+import { useSelector } from 'react-redux';
 
 import styles from './LoggedHomePage.module.scss';
-import { useSelector } from 'react-redux';
 
 interface ILoggedHomePageProps {
   moviesData: ICollection[] 
-  searchPhrase?: string
+  searchPhrase?: string | string[] | undefined
 }
 
 const LoggedHomePage: FC<ILoggedHomePageProps> = ({ searchPhrase, moviesData }) => {

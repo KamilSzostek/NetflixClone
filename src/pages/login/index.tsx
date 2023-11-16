@@ -4,6 +4,8 @@ import NavBar from '@/components/NavBar/NavBar';
 import Head from 'next/head';
 import ShortFooter from '@/components/ShortFooter/ShortFooter';
 import BaseButton from '@/components/ui/BaseButton/BaseButton';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 import styles from '@/styles/Login.module.scss';
 
@@ -21,7 +23,7 @@ const Login: FC = () => {
                 <BaseButton text='sign in' linkPath='/login' />
             </NavBar>
             <main>
-                <SignInForm/>
+                <SignInForm />
             </main>
             <ShortFooter />
         </div>
@@ -29,3 +31,17 @@ const Login: FC = () => {
 };
 
 export default Login;
+
+export const getServerSideProps = async (context: any) => {
+    const token = await getServerSession(
+        context.req,
+        context.res,
+        authOptions
+    )
+    if (token) return {
+        redirect: {
+            destination: '/browse',
+            permament: false
+        }
+    }
+}

@@ -5,6 +5,8 @@ import HelpForm from '@/components/HelpForm/HelpForm';
 import ShortFooter from '@/components/ShortFooter/ShortFooter';
 import { useLogInState } from '@/hooks/useLogInState';
 import BaseButton from '@/components/ui/BaseButton/BaseButton';
+import { authOptions } from '../api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth';
 
 import styles from '@/styles/LoginHelp.module.scss';
 
@@ -33,3 +35,17 @@ const LoginHelp: FC = () => {
 };
 
 export default LoginHelp;
+
+export const getServerSideProps = async (context: any) => {
+    const token = await getServerSession(
+        context.req,
+        context.res,
+        authOptions
+    )
+    if (token) return {
+        redirect: {
+            destination: '/browse',
+            permament: false
+        }
+    }
+}

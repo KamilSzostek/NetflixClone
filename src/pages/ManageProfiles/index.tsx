@@ -45,19 +45,26 @@ const ManageProfiles: FC<IManageProfileProps> = (props) => {
 
 export default ManageProfiles;
 export const getServerSideProps: GetServerSideProps<IManageProfileProps> = async (context) => {
-    const db = await getCollectionDB('NetflixUsers')
     const token = await getServerSession(
         context.req,
         context.res,
         authOptions
     )
-    const user = await db.collection.findOne({ email: token?.user?.email })
-    db.client.close()
-
-    return {
-        props: {
-            profiles: user ? user.profiles : [],
-            token
-        },
-    };
+    if(token){
+        const db = await getCollectionDB('NetflixUsers')
+        const user = await db.collection.findOne({ email: token?.user?.email })
+        db.client.close()
+    
+        return {
+            props: {
+                profiles: user ? user.profiles : [],
+            },
+        };
+    }
+    else return {
+        redirect: {
+            destination: '/',
+            permanent: false
+        }
+    }
 };

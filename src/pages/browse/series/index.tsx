@@ -4,13 +4,12 @@ import { GetServerSideProps } from 'next';
 import { ICollection } from '@/helpers/interfaces';
 import {IBrowseProps} from '../index';
 import { createDataLimit } from '@/helpers/createDataLimit';
-import { useShowPage } from '@/hooks/useShowPage';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
-const BrowseSeries: FC<IBrowseProps> = ({ movies, token }) => {
+const BrowseSeries: FC<IBrowseProps> = ({ movies }) => {
 
-      return useShowPage(token) && (<LoggedHomePage moviesData={movies} />)
+      return <LoggedHomePage moviesData={movies} />
 }
 
 export default BrowseSeries;
@@ -21,8 +20,8 @@ export const getServerSideProps: GetServerSideProps<IBrowseProps> = async (conte
       context.res,
       authOptions
    )
-   let categoriesArr: ICollection[] = []
    if(token){
+      const categoriesArr: ICollection[] = []
       const options = {
          method: 'GET',
          headers: {
@@ -46,13 +45,17 @@ export const getServerSideProps: GetServerSideProps<IBrowseProps> = async (conte
       const res4 = await fetch('https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1', options)
       const data4 = await res4.json()
       categoriesArr.push({title: 'Airing Today', movies: createDataLimit( data4.results)})
-   }
-   else throw new Error('Invalid authorization')
       return {
          props: {
-            movies: categoriesArr,
-            token
+            movies: categoriesArr
          },
       };
+   }
+   else return {
+      redirect: {
+         destination: '/',
+         permanent: false
+      }
+   }
 };
 

@@ -5,9 +5,9 @@ import StepCounter from '@/components/StepCounter/StepCounter';
 import Footer from '@/components/Footer/Footer';
 import BaseButton from '@/components/ui/BaseButton/BaseButton';
 import { footerLinkArr2 } from '@/helpers/footerLinkLists';
+import { getCollectionDB } from '@/helpers/dbConnection';
 
 import styles from '../../../styles/configureAccount.module.scss'
-import { useShowPageSignup } from '@/hooks/useShowPageSignup';
 
 const ConfigureAccount: FC = () => {
     const [email, setEmail] = useState('')
@@ -34,3 +34,8 @@ const ConfigureAccount: FC = () => {
 }
 
 export default ConfigureAccount;
+
+export const getServerSideProps = async () => {
+    const db = await getCollectionDB('NetflixUsers')
+    const user = await db.collection.findOne({email: ${}})
+}

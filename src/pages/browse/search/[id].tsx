@@ -2,36 +2,29 @@ import { FC } from 'react';
 import { GetServerSideProps } from 'next';
 import { ICollection, IMovie } from '@/helpers/interfaces';
 import LoggedHomePage from '@/components/LoggedHomePage/LoggedHomePage';
-import { useShowPage } from '@/hooks/useShowPage';
-import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
-export interface IBrowseProps {
-   phrase: string
+export interface IBrowseSearchProps {
+   phrase: string | string[] | undefined
    data: ICollection
-   token: Session | null
 }
 
-const BrowseSearch: FC<IBrowseProps> = ({ phrase, data, token }) => {
+const BrowseSearch: FC<IBrowseSearchProps> = ({ phrase, data }) => {
    const collections = [data]
-   return useShowPage(token) && (<LoggedHomePage searchPhrase={phrase} moviesData={collections} />)
+   return <LoggedHomePage searchPhrase={phrase} moviesData={collections} />
 }
 
 export default BrowseSearch;
 
-export const getServerSideProps: GetServerSideProps<{ phrase: string | string[] | undefined, data: ICollection }> = async (context) => {
-   const { params } = context
-   let results: ICollection = {
-      title: '',
-      movies: []
-   }
+export const getServerSideProps: GetServerSideProps<IBrowseSearchProps> = async (context) => {
    const token = await getServerSession(
       context.req,
       context.res,
       authOptions
    )
    if(token){
+      const { params } = context
       const options = {
          method: 'GET',
          headers: {
@@ -42,17 +35,28 @@ export const getServerSideProps: GetServerSideProps<{ phrase: string | string[] 
       const res = await fetch(`https://api.themoviedb.org/3/search/collection?query=${params?.id}&language=en-US`, options)
       const data = await res.json()
       const filteredData = data.results.filter((movie: IMovie) => movie.poster_path !== null && movie.backdrop_path !== null && movie.overview !== '')
-      results = {
+      const results = {
          title: 'Search',
          movies: filteredData
       }
+      return {
+         props: {
+            phrase: params?.id,
+            data: results,
+         },
+      };
    }
-   else throw new Error('Invalid authorization')
-   return {
-      props: {
-         phrase: params?.id,
-         data: results,
-         token
+   else return {
+      redirect: {
+         destination: '/',
+         permament: false
       },
-   };
+      props: {
+         phrase: '',
+         data: {
+            title: '',
+            movies: []
+         }
+      }
+   }
 };

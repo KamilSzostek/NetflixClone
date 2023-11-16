@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeIsProfileSelected, isProfileSelector, profileIconSelector, profileNameSelector, setProfileIcon, setProfileName } from '@/store/selectedProfile';
+import { changeIsProfileSelected, profileIconSelector, profileNameSelector, setProfileIcon, setProfileName } from '@/store/selectedProfile';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import KidsIcon from '../../../public/assets/profiles/kids.png'
@@ -13,9 +13,9 @@ import Popular from '../../../public/assets/notification/tophits.jpg'
 import Old from '../../../public/assets/notification/oldgold.jpg'
 import Cinema from '../../../public/assets/notification/lastcinema.jpg'
 import Horror from '../../../public/assets/notification/horrorfans.jpg'
+import { signOut } from 'next-auth/react';
 
 import styles from './LoggedMenu.module.scss'
-import { signOut } from 'next-auth/react';
 
 const LoggedMenu: FC = () => {
   const dispatch = useDispatch()
@@ -25,8 +25,8 @@ const LoggedMenu: FC = () => {
   const router = useRouter()
 
   const signoutHandler = async () => {
-    await signOut()
     sessionStorage.removeItem('ProfileId')
+    await signOut()
     router.push('/')
   }
 
