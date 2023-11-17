@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import Head from 'next/head'
 import Header from '@/components/Header/Header'
 import HomePage from '@/components/HomePage/HomePage'
@@ -9,9 +9,10 @@ import { getCollectionDB } from '@/helpers/dbConnection'
 import { IQA } from '@/helpers/interfaces'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
+import { eraseCookie } from '@/helpers/cookies'
 
 interface IHomeProps {
-  qa: IQA[]
+  qa: IQA[],
 }
 
 const Home: FC<IHomeProps> = ({ qa }) => {

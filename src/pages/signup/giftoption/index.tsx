@@ -10,7 +10,10 @@ import Footer from '@/components/Footer/Footer';
 import { checkValidity } from '@/helpers/validationFunctions';
 import { useRouter } from 'next/router';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
-import { useShowPageSignup } from '@/hooks/useShowPageSignup';
+import { GetServerSideProps } from 'next';
+import { getCookieOnServerSide } from '@/helpers/cookies';
+import { decrypt } from '@/helpers/dataEncryption';
+import { getCollectionDB } from '@/helpers/dbConnection';
 
 const GiftOption: FC = () => {
     const router = useRouter()
@@ -64,3 +67,50 @@ const GiftOption: FC = () => {
 }
 
 export default GiftOption;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const contextCookie = context.req.headers.cookie
+    const emailEncrypted = contextCookie && getCookieOnServerSide('email_session', contextCookie)
+    const email = emailEncrypted && decrypt(emailEncrypted, process.env.CRYPTO_SECRET!)
+    if (email) {
+        const db = await getCollectionDB('NetflixUsers')
+        const user = await db.collection.findOne({ email: email })
+        if (user) {
+            if(user.isMembershipPaid) {
+                return {
+                    redirect: {
+                        destination: '/signup/configureAccount',
+                        permanent: false
+                    },
+                }
+            }
+            else if (user.plan.price === '') {
+                return {
+                    redirect: {
+                        destination: '/signup/planform',
+                        permanent: false
+                    },
+                }
+            }
+            else {
+                return {
+                    props: {}
+                }
+            }
+        }
+        else return {
+            redirect: {
+                destination: '/signup',
+                permanent: false
+            },
+        }
+    }
+    else {
+        return {
+            redirect: {
+                destination: '/signup',
+                permanent: false
+            },
+        }
+    }
+}

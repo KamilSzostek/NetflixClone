@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import NavBar from '@/components/NavBar/NavBar';
 import BaseButton from '../BaseButton/BaseButton';
+import { eraseCookie } from '@/helpers/cookies';
 
 import styles from './SignUpLayout.module.scss'
 
@@ -14,7 +15,8 @@ const SignUpLayout: FC<ISignUpLayoutProps> = ({ children, children2 }) => {
   const router = useRouter()
 
   const signOutHandler = () => {
-    sessionStorage.removeItem('newMemeber')
+    sessionStorage.removeItem('newMember')
+    eraseCookie('email_session')
     router.push('/')
   }
 

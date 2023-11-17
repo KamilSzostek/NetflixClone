@@ -1,8 +1,11 @@
-export function setCookie(name: string, value: string, days: number){
+import { GetServerSidePropsContext } from "next"
+import { encrypt } from "./dataEncryption"
+
+export function setCookie(name: string, value: string, days: number, isSecure = false, secret?: string){
     const date = new Date()
     date.setTime(date.getTime() + (days*24*60*60*1000))
     const expires = `; expires= ${date.toUTCString()}`
-    document.cookie = `${name}=${value}${expires}; path=/`
+    document.cookie = `${name}=${isSecure ? encrypt(value, secret!) : value}${expires}; path=/`
 }
 
 export function getCookie(name: string){
@@ -12,6 +15,12 @@ export function getCookie(name: string){
         return cookie;
     }
     else return null
+}
+
+export function getCookieOnServerSide(name: string, contextCookie: string){
+        const cookiesArr = contextCookie?.split(';')
+        const cookie = cookiesArr?.find(cook => cook.substring(0, name.length) == name)
+        return cookie
 }
 
 export function eraseCookie(name: string) { 

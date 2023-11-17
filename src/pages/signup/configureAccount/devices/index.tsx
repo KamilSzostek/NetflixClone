@@ -8,11 +8,13 @@ import BaseButton from '@/components/ui/BaseButton/BaseButton';
 import DeviceCard, { IDevice } from '@/components/DeviceCard/DeviceCards';
 import Footer from '@/components/Footer/Footer';
 import { footerLinkArr2 } from '@/helpers/footerLinkLists';
+import { getCookieOnServerSide } from '@/helpers/cookies';
+import { decrypt } from '@/helpers/dataEncryption';
 import { getCollectionDB } from '@/helpers/dbConnection';
 
 import stylesDevices from '../../../../styles/ConfigureDevices.module.scss'
 import styles from '../../../../styles/configureAccount.module.scss'
-import { useShowPageSignup } from '@/hooks/useShowPageSignup';
+
 
 interface IConfigureDeviceProps {
     devices: IDevice[]
@@ -51,18 +53,63 @@ const ConfigureDevices: FC<IConfigureDeviceProps> = ({ devices }) => {
 
 export default ConfigureDevices;
 
-export const getServerSideProps: GetServerSideProps<IConfigureDeviceProps> = async () => {
-    const db = await getCollectionDB('Devices')
-    const devices = await db.collection.find().toArray()
-    db.client.close()
-    return {
-        props: {
-            devices: devices.map(device => ({
-                _id: device._id.toString(),
-                name: device.name,
-                icon: device.icon,
-                description: device.description
-            }))
+
+export const getServerSideProps: GetServerSideProps<IConfigureDeviceProps> = async (context) => {
+    const contextCookie = context.req.headers.cookie
+    const emailEncrypted = contextCookie && getCookieOnServerSide('email_session', contextCookie)
+    const email = emailEncrypted && decrypt(emailEncrypted, process.env.CRYPTO_SECRET!)
+    if (email) {
+        const db = await getCollectionDB('NetflixUsers')
+        const user = await db.collection.findOne({ email: email })
+        db.client.close()
+        if (user) {
+            if(!user.isMembershipPaid) {
+                if (user.plan.price === '') {
+                    return {
+                        redirect: {
+                            destination: '/signup/planform',
+                            permanent: false
+                        },
+                    }
+                }
+                else {
+                    return {
+                        redirect: {
+                            destination: '/signup/paymentPicker',
+                            permanent: false
+                        },
+                    }
+                }
+            }
+            else {
+                const db = await getCollectionDB('Devices')
+                const devices = await db.collection.find().toArray()
+                db.client.close()
+                return {
+                    props: {
+                        devices: devices.map(device => ({
+                            _id: device._id.toString(),
+                            name: device.name,
+                            icon: device.icon,
+                            description: device.description
+                        }))
+                    }
+                }
+            }
+        }
+        else return {
+            redirect: {
+                destination: '/signup',
+                permanent: false
+            },
         }
     }
-} 
+    else {
+        return {
+            redirect: {
+                destination: '/signup',
+                permanent: false
+            },
+        }
+    }
+}

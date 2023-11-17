@@ -14,13 +14,19 @@ import LanguageSelector from '@/components/LanguageSelector/LanguageSelector';
 import { ageGroups } from '@/helpers/ageGroup';
 import KidsIcon from '../../../../../public/assets/profiles/kids.png'
 import { signIn } from 'next-auth/react';
+import { getCookieOnServerSide } from '@/helpers/cookies';
 import { decrypt } from '@/helpers/dataEncryption';
+import { getCollectionDB } from '@/helpers/dbConnection';
 
 import styles from '../../../../styles/configureAccount.module.scss'
 import stylesProfiles from '../../../../styles/ConfigureProfiles.module.scss'
 
+interface IConfigureProfileProps {
+    secret: string
+    languages: ILanguage[]
+}
 
-const ConfigureProfiles: FC<{ secret: string }> = ({ secret }) => {
+const ConfigureProfiles: FC<IConfigureProfileProps> = ({ languages, secret }) => {
     const currentYear = new Date().getFullYear()
     const randomId = useId()
     const router = useRouter()
@@ -248,7 +254,7 @@ const ConfigureProfiles: FC<{ secret: string }> = ({ secret }) => {
                         <h2>In which languages do you like to watch movies series and programs?</h2>
                         <h4>This information will help you to configure sound or subtitle settings, you can change these settings at any time.</h4>
                     </section>
-                    <LanguageSelector selectedLanguages={selectedLanguages} selectedLanguageHandler={selectedLanguageHandler}>
+                    <LanguageSelector languages={languages} selectedLanguages={selectedLanguages} selectedLanguageHandler={selectedLanguageHandler}>
                         <BaseButton text='Finish' isBig onClick={finishConfigurationHandler} />
                     </LanguageSelector>
                 </div>
@@ -259,10 +265,63 @@ const ConfigureProfiles: FC<{ secret: string }> = ({ secret }) => {
 
 export default ConfigureProfiles;
 
-export const getServerSideProps: GetServerSideProps<{secret: string}> = async () => {
-    return {
-        props: {
-            secret: `${process.env.CRYPTO_SECRET}`
+export const getServerSideProps: GetServerSideProps<IConfigureProfileProps> = async (context) => {
+    const contextCookie = context.req.headers.cookie
+    const emailEncrypted = contextCookie && getCookieOnServerSide('email_session', contextCookie)
+    const email = emailEncrypted && decrypt(emailEncrypted, process.env.CRYPTO_SECRET!)
+    if (email) {
+        const db = await getCollectionDB('NetflixUsers')
+        const user = await db.collection.findOne({ email: email })
+        db.client.close()
+        if (user) {
+            if (!user.isMembershipPaid) {
+                if (user.plan.price === '') {
+                    return {
+                        redirect: {
+                            destination: '/signup/planform',
+                            permanent: false
+                        },
+                    }
+                }
+                else {
+                    return {
+                        redirect: {
+                            destination: '/signup/paymentPicker',
+                            permanent: false
+                        },
+                    }
+                }
+            }
+            else {
+                const db = await getCollectionDB('Languages')
+                const languages = await db.collection.find().toArray()
+                db.client.close()
+                return {
+                    props: {
+                        secret: process.env.CRYPTO_SECRET || '',
+                        languages: languages.map(language => ({
+                            _id: language._id.toString(),
+                            code: language.code,
+                            name: language.name,
+                            nativeName: language.nativeName
+                        }))
+                    }
+                }
+            }
+        }
+        else return {
+            redirect: {
+                destination: '/signup',
+                permanent: false
+            },
+        }
+    }
+    else {
+        return {
+            redirect: {
+                destination: '/signup',
+                permanent: false
+            },
         }
     }
 }

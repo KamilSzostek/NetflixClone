@@ -12,9 +12,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import SignUpLayout from '@/components/ui/SignUpLayout/SignUpLayout';
 import Check from '../../../../public/assets/Checkmark.png'
-import { useShowPageSignup } from '@/hooks/useShowPageSignup';
+import { GetServerSideProps } from 'next';
+import { decrypt } from '@/helpers/dataEncryption';
+import { getCollectionDB } from '@/helpers/dbConnection';
 
 import styles from '../../../components/ui/SignUpLayout/SignUpLayout.module.scss'
+import { getCookieOnServerSide } from '@/helpers/cookies';
 
 export interface IPlan {
     [key: string]: any
@@ -99,3 +102,35 @@ const PlanForm: FC = () => {
 };
 
 export default PlanForm;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const contextCookie = context.req.headers.cookie
+    const emailEncrypted = contextCookie && getCookieOnServerSide('email_session', contextCookie)
+    const email = emailEncrypted && decrypt(emailEncrypted, process.env.CRYPTO_SECRET!)
+    if (email) {
+        const db = await getCollectionDB('NetflixUsers')
+        const user = await db.collection.findOne({ email: email })
+        if (user) {
+            return user.isMembershipPaid && {
+                redirect: {
+                    destination: '/signup/configureAccount',
+                    permanent: false
+                },
+            }
+        }
+        else return {
+            redirect: {
+                destination: '/signup',
+                permanent: false
+            },
+        }
+    }
+    else {
+        return {
+            redirect: {
+                destination: '/signup',
+                permanent: false
+            },
+        }
+    }
+}

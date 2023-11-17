@@ -13,12 +13,16 @@ import { emailValidation, passwordValidation } from '@/helpers/validationFunctio
 import { initialSelectedPlan } from './planform';
 import { IUser } from '@/helpers/interfaces';
 import Link from 'next/link';
-import { useShowPageSignup } from '@/hooks/useShowPageSignup';
+import { setCookie } from '@/helpers/cookies';
 
 import styles from '../../styles/SignUp.module.scss'
-import { decrypt, encrypt } from '@/helpers/dataEncryption';
+import { GetServerSideProps } from 'next';
 
-const SignUp: FC = () => {
+interface ISignUpProps {
+    secret: string | undefined
+}
+
+const SignUp: FC<ISignUpProps> = ({ secret }) => {
     const router = useRouter()
 
     const [email, setEmail] = useState(setNewMember())
@@ -41,7 +45,7 @@ const SignUp: FC = () => {
     const linkArr = ['FAQ', 'Cancel Membership', 'Help Center', 'Netflix Shop', 'Terms of Use', 'Privacy', 'Cookie Preferences', 'Corporate Information', 'Impressum']
 
     const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.currentTarget.value)
-    
+
     const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.currentTarget.value)
 
     const showSecondSectionHandler = () => {
@@ -50,10 +54,8 @@ const SignUp: FC = () => {
     }
 
     function setNewMember() {
-        let newMember;
         try {
-            newMember = sessionStorage.getItem('newMember')!
-            return newMember
+            return sessionStorage.getItem('newMember')!
         }
         catch (e) {
             return 'No email in session storage'
@@ -99,6 +101,7 @@ const SignUp: FC = () => {
                             body: newUser
                         }).then(res => res.json()).then(() => {
                             sessionStorage.setItem('newMember', email)
+                            setCookie('email_session', email, 1, true, secret)
                             router.push('/signup/planform')
                         }
                         ).catch(err => console.error(err))
@@ -113,6 +116,7 @@ const SignUp: FC = () => {
                         body: newUser
                     }).then(res => res.json()).then((data) => {
                         sessionStorage.setItem('newMember', email)
+                        setCookie('email_session', email, 1, true, secret)
                         router.push('/signup/planform')
                     }).catch(err => console.error(err))
                 }
@@ -166,3 +170,12 @@ const SignUp: FC = () => {
 };
 
 export default SignUp;
+
+export const getServerSideProps: GetServerSideProps<ISignUpProps> = async () => {
+    return {
+        props:
+        {
+            secret: process.env.CRYPTO_SECRET
+        }
+    }
+}
